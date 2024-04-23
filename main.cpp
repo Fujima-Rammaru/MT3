@@ -1,4 +1,5 @@
 #include <Novice.h>
+#include""
 
 const char kWindowTitle[] = "GC2A_10_フジマ_ランマル_MT3";
 
