@@ -12,6 +12,11 @@ public:
 
 	Vector3 Transform(const Vector3& vector, const Matrix4x4& matrix);
 
+	Matrix4x4 MakeRotateXMatrix(float radian);
+
+	Matrix4x4 MakeRotateYMatrix(float radian);
+
+	Matrix4x4 MakeRotateZMatrix(float radian);
 
 private:
 
