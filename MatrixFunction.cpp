@@ -147,3 +147,12 @@ Matrix4x4 MatrixFunction::MakeRotateZMatrix(float radian)
 
 	return result;
 }
+
+Matrix4x4 MatrixFunction::Multiply(Matrix4x4 m1, Matrix4x4 m2)
+{
+	Matrix4x4 result;
+
+
+
+	return result;
+}

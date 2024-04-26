@@ -18,6 +18,8 @@ public:
 
 	Matrix4x4 MakeRotateZMatrix(float radian);
 
+	Matrix4x4 Multiply(Matrix4x4 m1, Matrix4x4 m2);
+
 private:
 
 };
