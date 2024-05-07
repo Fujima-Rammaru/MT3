@@ -38,16 +38,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	Vector3 scale{ 1.2f,0.79f,-2.1f };//拡縮
 	Vector3 rotate{ 0.4f,1.43f,-0.8f };//回転
-	Vector3 translate{2.7f,-4.15f,1.57f };//平行移動
+	Vector3 translate{ 2.7f,-4.15f,1.57f };//平行移動
 
-	Matrix4x4 rotateXMatrix = matrixFunction->MakeRotateXMatrix(rotate.x);//X軸回りの3次元回転行列
-	Matrix4x4 rotateYMatrix = matrixFunction->MakeRotateYMatrix(rotate.y);//Y軸回りの3次元回転行列
-	Matrix4x4 rotateZMatrix = matrixFunction->MakeRotateZMatrix(rotate.z);//Z軸回りの3次元回転行列
-
-	//3軸の回転を合成
-	Matrix4x4 rotateXYZMatrix = matrixFunction->Multiply(rotateXMatrix, matrixFunction->Multiply(rotateYMatrix, rotateZMatrix));
-	
-	Matrix4x4 worldMatrix = ;
+	Matrix4x4 worldMatrix = matrixFunction->MakeAffineMatrix(scale, rotate, translate);
 	// キー入力結果を受け取る箱
 	char keys[256] = { 0 };
 	char preKeys[256] = { 0 };
@@ -72,10 +65,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 		/// ↓描画処理ここから
 		///
-		MatrixScreenPrintf(0, 0, rotateXMatrix, "rotateXMatrix");
-		MatrixScreenPrintf(0, kRowHeight * 5, rotateYMatrix, "rotateYMatrix");
-		MatrixScreenPrintf(0, kRowHeight * 5 * 2, rotateZMatrix, "rotateZMatrix");
-		MatrixScreenPrintf(0, kRowHeight * 5 * 3, rotateXYZMatrix, "rotateXYZMatrix");
+		MatrixScreenPrintf(0, 0, worldMatrix, "worldMatrix");
 		///
 		/// ↑描画処理ここまで
 		///
