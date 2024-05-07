@@ -148,6 +148,15 @@ Matrix4x4 MatrixFunction::MakeRotateZMatrix(float radian)
 	return result;
 }
 
+Matrix4x4 MatrixFunction::MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate)
+{
+	Matrix4x4 result;
+	result = MakeScaleMatrix(scale) *MakeTranslateMatrix(translate) ;
+
+
+	return result;
+}
+
 Matrix4x4 MatrixFunction::Multiply(const Matrix4x4& m1, const Matrix4x4& m2)
 {
 	Matrix4x4 result;
