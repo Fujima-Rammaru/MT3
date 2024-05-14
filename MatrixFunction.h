@@ -28,7 +28,7 @@ public:
 
 	Matrix4x4 MakeViewPortMatrix(float left, float top, float width, float height, float MinDepth, float maxDepth);
 
-	
+	Matrix4x4 Inverse();
 private:
 
 };
