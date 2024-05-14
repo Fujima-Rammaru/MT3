@@ -22,13 +22,13 @@ public:
 
 	Matrix4x4 Multiply(const Matrix4x4& m1, const Matrix4x4& m2);
 
+	Matrix4x4 MakeOrthographicMatrix(float left, float top, float right, float bottom, float nearClip, float farClip);
 
-	Matrix4x4 MakeOrthographicMatrix(float left,float top,float right,float bottom,float nearClip,float farClip );
-
-	Matrix4x4 MakePerspectiveFovMatrix(float fovY,float aspectRatio,float nearClip,float farClip );
+	Matrix4x4 MakePerspectiveFovMatrix(float fovY, float aspectRatio, float nearClip, float farClip);
 
 	Matrix4x4 MakeViewPortMatrix(float left, float top, float width, float height, float MinDepth, float maxDepth);
 
+	
 private:
 
 };
