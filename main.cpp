@@ -36,8 +36,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	// ライブラリの初期化
 	Novice::Initialize(kWindowTitle, 1280, 720);
 
+	//正射影行列
 	Matrix4x4 orthographicMatrix = matrixFunction->MakeOrthographicMatrix(-160.0f,160.0f,200.0f,300.0f,0.0f,1000.0f);
+	
+	//透視影行列
 	Matrix4x4 perspectiveFovMatrix = matrixFunction->MakePerspectiveFovMatrix(0.63f,1.33f,0.1f,1000.0f);
+	
+	//ビューポート変換行列
 	Matrix4x4 viewportMatrix = matrixFunction->MakeViewPortMatrix(100.0f,200.0f,600.0f,300.0f,0.0f,1.0f);
 	// キー入力結果を受け取る箱
 	char keys[256] = { 0 };
