@@ -28,7 +28,10 @@ public:
 
 	Matrix4x4 MakeViewPortMatrix(float left, float top, float width, float height, float MinDepth, float maxDepth);
 
-	Matrix4x4 Inverse();
+	Matrix4x4 Inverse(const Matrix4x4& m);
+
+	Vector3 Cross(const Vector3& v1, const Vector3& v2);
+
 private:
 
 };
