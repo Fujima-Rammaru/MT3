@@ -26,7 +26,13 @@ public:
 
 	Matrix4x4 MakePerspectiveFovMatrix(float fovY, float aspectRatio, float nearClip, float farClip);
 
-	Matrix4x4 MakeViewPortMatrix(float left, float top, float width, float height, float MinDepth, float maxDepth);
+	Matrix4x4 MakeViewPortMatrix(
+		const float& left,
+		const float& top,
+		const float& width,
+		const float& height,
+		const float& MinDepth,
+		const float& maxDepth);
 
 	Matrix4x4 Inverse(const Matrix4x4& m);
 

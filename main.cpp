@@ -1,7 +1,9 @@
+#define _USE_MATH_DEFINES
 #include <Novice.h>
 #include"MatrixFunction.h"
 #include"Vector3.h"
 #include"iostream"
+
 
 const char kWindowTitle[] = "GC2A_10_フジマ_ランマル_MT3";
 
@@ -9,15 +11,15 @@ static const int kRowHeight = 20;
 static const int kColumnWidth = 60;
 
 //4x4行列の数値表示
-//static void MatrixScreenPrintf(int x, int y, const Matrix4x4& matrix, const char* functionName) {
-//	Novice::ScreenPrintf(x, y, functionName);
-//
-//	for (int row = 0; row < 4; row++) {
-//		for (int column = 0; column < 4; column++) {
-//			Novice::ScreenPrintf(x + column * kColumnWidth, y + row * kRowHeight + 17, "%6.02f", matrix.m[row][column]);
-//		}
-//	}
-//}
+static void MatrixScreenPrintf(int x, int y, const Matrix4x4& matrix, const char* functionName) {
+	Novice::ScreenPrintf(x, y, functionName);
+
+	for (int row = 0; row < 4; row++) {
+		for (int column = 0; column < 4; column++) {
+			Novice::ScreenPrintf(x + column * kColumnWidth, y + row * kRowHeight + 17, "%6.02f", matrix.m[row][column]);
+		}
+	}
+}
 
 //３次元ベクトルの数値表現
 void VectorScreenPrintf(int x, int y, const Vector3& vector, const char* label) {
@@ -30,8 +32,8 @@ void VectorScreenPrintf(int x, int y, const Vector3& vector, const char* label) 
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
-	MatrixFunction* matrixFunction;
-	matrixFunction = new MatrixFunction;
+	MatrixFunction* matFunc;
+	matFunc = new MatrixFunction;
 
 	const int kWindowWidth = 1280;
 	const int kWindowHeight = 720;
@@ -39,43 +41,37 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	// ライブラリの初期化
 	Novice::Initialize(kWindowTitle, kWindowWidth, kWindowHeight);
 
+	Vector3 v1{ 1.2f,-3.9f,2.5f };
+	Vector3 v2{ 2.8f,0.4f,-1.3f };
+	Vector3 cross = matFunc->Cross(v1, v2);
+
 	Vector3 rotate{ 0.0f, 0.0f, 0.0f };//回転
 	Vector3 translate{ 0.0f, 0.0f, 0.0f };//移動
 	Vector3 scale{ 1.0f, 1.0f, 1.0f };//拡縮
 
-	//各種行列の計算
-	Matrix4x4 worldMatrix = matrixFunction->MakeAffineMatrix(scale, rotate, translate);//ワールド行列
-	Matrix4x4 camaraMatrix = matrixFunction->MakeAffineMatrix(scale, { 0.0f,0.0f,0.0f }, translate);
-	Matrix4x4 viewMatrix = matrixFunction->Inverse(camaraMatrix);//カメラのビュー行列
+	Vector3    rotate2{ 0.0f, 0.0f, 0.0f };//回転
+	Vector3 translate2{ 0.0f, 0.0f, 0.0f };//移動
 
-	//透視投影行列
-	Matrix4x4 projectionMatrix = matrixFunction->MakePerspectiveFovMatrix(0.45f, float(kWindowWidth) / float(kWindowHeight), 10.0f, 100.0f);
+	Vector3 cameraScale{ 1.0f, 1.0f, 1.0f };//拡縮
+	Vector3 cameraRotate{ 0.0f, 0.0f, 0.0f };
+	Vector3 cameraTranslate{ 0.0f,0.0f,-0.5f };
+	Matrix4x4 worldMatrix;
 
-	Matrix4x4 worldViewProjectionmatrix = matrixFunction->Multiply(worldMatrix, matrixFunction->Multiply(viewMatrix, projectionMatrix));
+	Matrix4x4 cameraMatrix;
+	Matrix4x4 viewMatrix;//カメラのビュー行列
 
-	Matrix4x4 viewPortMatrix = matrixFunction->MakeViewPortMatrix(0, 0, float(kWindowWidth), float(kWindowHeight), 0.0f, 1.0f);
+	//透視投影行列(同次クリップ空間)
+	Matrix4x4 projectionMatrix;
+	Matrix4x4 worldViewProjectionMatrix;
+	Matrix4x4 viewPortMatrix;
+
 
 	//Screen空間へと頂点を変換する
-
-	Vector3 kLocalVertices[3] = {//ローカル座標系
-		{0.1f,0.1f,0.1f,},
-		{20.0f,20.0f,0.1f},
-		{10.0f,50.0f,0.1f},
-
-	};
-
-	Vector3 screenVertices[3];
-
-	for (int i = 0; i < 3; i++) {
-		//NDCまで変換。Transformを使うと同次座標->デカルト座標系の処理が行われ、結果的にZDivideが行われることになる
-		Vector3 ndcVertex = matrixFunction->Transform(kLocalVertices[i], worldViewProjectionmatrix);//正規化デバイス座標系
-		//viewport変換を行ってscreen空間へ
-		screenVertices[i] = matrixFunction->Transform(ndcVertex, viewPortMatrix);
-	}
-
-	Vector3 v1{ 1.2f,-3.9f,2.5f };
-	Vector3 v2{ 2.8f,0.4f,-1.3f };
-	Vector3 cross = matrixFunction->Cross(v1, v2);
+	Vector3 kLocalVertices[3] = {
+		{-0.05f,0.0f,0.1f},
+		{0.0f,0.05f,0.1f},
+		{0.05f,0.0f,0.1f},
+	};//ローカル座標
 
 	// キー入力結果を受け取る箱
 	char keys[256] = { 0 };
@@ -94,6 +90,39 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// ↓更新処理ここから
 		///
 
+		if (Novice::CheckHitKey(DIK_A)) {
+			translate.x -= 0.001f;
+		}
+		else if (Novice::CheckHitKey(DIK_D)) {
+			translate.x += 0.001f;
+		}
+
+		if (Novice::CheckHitKey(DIK_W)) {
+			translate.z += 0.001f;
+		}
+		else if (Novice::CheckHitKey(DIK_S)) {
+			translate.z -= 0.001f;
+		}
+
+		rotate.y += 0.01f;
+
+		//各種行列の計算(レンダリングパイプライン)
+		worldMatrix = matFunc->MakeAffineMatrix(scale,rotate,translate);
+		cameraMatrix = matFunc->MakeAffineMatrix(cameraScale, cameraRotate, cameraTranslate);//カメラ行列
+		viewMatrix = matFunc->Inverse(cameraMatrix);//カメラのビュー行列
+
+		//透視投影行列(同次クリップ空間)
+		projectionMatrix = matFunc->MakePerspectiveFovMatrix(0.45f, float(kWindowWidth) / float(kWindowHeight), 0.1f, 100.0f);
+		worldViewProjectionMatrix = matFunc->Multiply(worldMatrix, matFunc->Multiply(viewMatrix, projectionMatrix));
+		viewPortMatrix = matFunc->MakeViewPortMatrix(0, 0, float(kWindowWidth), float(kWindowHeight), 0.0f, 1.0f);
+
+		Vector3 screenVertices1[3] = {
+matFunc->Transform(matFunc->Transform(kLocalVertices[0],worldViewProjectionMatrix),viewPortMatrix),
+matFunc->Transform(matFunc->Transform(kLocalVertices[1],worldViewProjectionMatrix),viewPortMatrix),
+matFunc->Transform(matFunc->Transform(kLocalVertices[2],worldViewProjectionMatrix),viewPortMatrix),
+		};
+
+	
 		///
 		/// ↑更新処理ここまで
 		///
@@ -102,12 +131,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// ↓描画処理ここか
 		/// 
 
-		VectorScreenPrintf(0, 0, cross, "Cross");
+		MatrixScreenPrintf(0, 0, worldMatrix, "worldMatrix");
 
 		Novice::DrawTriangle(
-			int(screenVertices[0].x), int(screenVertices[0].y),
-			int(screenVertices[1].x), int(screenVertices[1].y),
-			int(screenVertices[2].x), int(screenVertices[2].y),
+			int(screenVertices1[0].x),
+			int(screenVertices1[0].y),
+			int(screenVertices1[1].x),
+			int(screenVertices1[1].y),
+			int(screenVertices1[2].x),
+			int(screenVertices1[2].y),
 			RED, kFillModeSolid
 		);
 		///
@@ -124,7 +156,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	}
 
 	// ライブラリの終了
-	delete matrixFunction;
+	delete matFunc;
 	Novice::Finalize();
 	return 0;
 }
