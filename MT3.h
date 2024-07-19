@@ -4,6 +4,7 @@
 #include<cmath>
 #include<assert.h>
 #include<algorithm> 
+#include<numbers> 
 
 Vector3 Add(const Vector3& v1, const Vector3& v2) {
 	Vector3 result;
@@ -421,6 +422,48 @@ Vector3 Cross(const Vector3& v1, const Vector3& v2)
 		v1.z * v2.x - v1.x * v2.z,
 		v1.x * v2.y - v1.y * v2.x
 	);
+}
+
+struct Sphere {
+	Vector3 center;
+	float radius;
+};
+
+void DrawSphere(const Sphere& sphere, const Matrix4x4& viewProjectionMat, const Matrix4x4& viewportMat, uint32_t color) {
+	float pi = std::numbers::pi_v<float>;
+	const uint32_t kSubdivision = 12;
+
+	//Œo“x•ªŠ„‚P‚Â•ª‚ÌŠp“x
+	const float kLonEvery = pi * 2.0f / float(kSubdivision);
+	//ˆÜ“x•ªŠ„‚P‚Â•ª‚ÌŠp“x
+	const float kLatEvery = pi / float(kSubdivision);
+
+	//ˆÜ“x‚Ì•ûŒü‚É•ªŠ„
+	for (uint32_t latIndex = 0; latIndex < kSubdivision; ++latIndex) {
+		float lat = -pi / 2.0f + kLatEvery * latIndex;
+		//Œo“x‚Ì•ûŒü‚É•ªŠ„‚µ‚È‚ª‚çü‚ð•`‚­
+		for (uint32_t lonIndex = 0; lonIndex < kSubdivision; ++lonIndex) {
+			float lon = lonIndex * kLonEvery;
+
+			Vector3 a = {
+				sphere.center.x + sphere.radius * std::cosf(lat) * std::cosf(lat),
+				sphere.center.y + sphere.radius * std::sinf(lat),
+				sphere.center.z + sphere.radius * std::cosf(lat) * std::sinf(lat),
+			};
+
+			Vector3 b = {
+				sphere.center.x + sphere.radius * std::cosf(lat + kLatEvery) * std::cosf(lat),
+				sphere.center.y + sphere.radius * std::sinf(lat + kLatEvery),
+				sphere.center.z + sphere.radius * std::cosf(lat + kLatEvery) * std::sinf(lat),
+			};
+			//================================================================================
+			Vector3 c = {
+				sphere.center.x + sphere.radius * std::cosf(lat) * std::cosf(lat),
+				sphere.center.y + sphere.radius * std::sinf(lat),
+				sphere.center.z + sphere.radius * std::cosf(lat) * std::sinf(lat),
+			};
+		}
+	}
 }
 
 
