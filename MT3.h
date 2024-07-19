@@ -3,6 +3,24 @@
 #include"matrix4x4.h"
 #include<cmath>
 #include<assert.h>
+#include<algorithm> 
+
+Vector3 Add(const Vector3& v1, const Vector3& v2) {
+	Vector3 result;
+	result.x = v1.x + v2.x;
+	result.y = v1.y + v2.y;
+	result.z = v1.z + v2.z;
+	return result;
+}
+
+//å∏éZ
+Vector3 Subtract(const Vector3& v1, const Vector3& v2) {
+	Vector3 result;
+	result.x = v1.x - v2.x;
+	result.y = v1.y - v2.y;
+	result.z = v1.z - v2.z;
+	return result;
+}
 
 Vector3 Multiply(float scalar, const Vector3& v) {
 	Vector3 result;
@@ -422,8 +440,11 @@ Vector3 Project(const Vector3& v1, const Vector3& v2) {
 	return Multiply(dot / v25qLength, v2);
 }
 
+//ç≈ãﬂê⁄ì_ÇãÅÇﬂÇÈ
 Vector3 ClosestPoint(const Vector3& point, const Segment& segment) {
-	Vector3 v=
-
+	Vector3 v = Subtract(point, segment.origin);
+	float t = Dot(v, segment.diff) / Dot(segment.diff, segment.diff);
+	t = std::clamp(t, 0.0f, 1.0f);
+	return Add(segment.origin, Multiply(t, segment.diff));
 }
 
