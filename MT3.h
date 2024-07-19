@@ -4,6 +4,14 @@
 #include<cmath>
 #include<assert.h>
 
+Vector3 Multiply(float scalar, const Vector3& v) {
+	Vector3 result;
+	result.x = scalar * v.x;
+	result.y = scalar * v.y;
+	result.z = scalar * v.z;
+	return result;
+}
+
 Matrix4x4 MakeTranslateMatrix(const Vector3& translate)
 {
 	Matrix4x4 result;
@@ -398,14 +406,24 @@ Vector3 Cross(const Vector3& v1, const Vector3& v2)
 }
 
 
-
+struct Segment {
+	Vector3 origin;//始点
+	Vector3 diff;//終点への差分ベクトル
+};
 
 float Dot(const Vector3& v1, const Vector3& v2) {
 	return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
 }
+
+//ベクトル射影
 Vector3 Project(const Vector3& v1, const Vector3& v2) {
 	float v25qLength = Dot(v2, v2);
 	float dot = Dot(v1, v2);
-	return MultiplyMat(dot / v25qLength, v2);
+	return Multiply(dot / v25qLength, v2);
+}
+
+Vector3 ClosestPoint(const Vector3& point, const Segment& segment) {
+	Vector3 v=
 
 }
+
