@@ -15,7 +15,7 @@ Vector3 Add(const Vector3& v1, const Vector3& v2) {
 	return result;
 }
 
-//Œ¸Z
+//æ¸›ç®—
 Vector3 Subtract(const Vector3& v1, const Vector3& v2) {
 	Vector3 result;
 	result.x = v1.x - v2.x;
@@ -24,7 +24,7 @@ Vector3 Subtract(const Vector3& v1, const Vector3& v2) {
 	return result;
 }
 
-Vector3 MultiplyVector(float scalar, const Vector3& v) {
+Vector3 Multiply(float scalar, const Vector3& v) {
 	Vector3 result;
 	result.x = scalar * v.x;
 	result.y = scalar * v.y;
@@ -129,6 +129,31 @@ Matrix4x4 MakeRotateZMatrix(float radian)
 		0.0f,0.0f,0.0f,1.0f };
 }
 
+Matrix4x4 MultiplyMat(const Matrix4x4& m1, const Matrix4x4& m2)
+{
+	Matrix4x4 result;
+	result.m[0][0] = m1.m[0][0] * m2.m[0][0] + m1.m[0][1] * m2.m[1][0] + m1.m[0][2] * m2.m[2][0] + m1.m[0][3] * m2.m[3][0];
+	result.m[1][0] = m1.m[1][0] * m2.m[0][0] + m1.m[1][1] * m2.m[1][0] + m1.m[1][2] * m2.m[2][0] + m1.m[1][3] * m2.m[3][0];
+	result.m[2][0] = m1.m[2][0] * m2.m[0][0] + m1.m[2][1] * m2.m[1][0] + m1.m[2][2] * m2.m[2][0] + m1.m[2][3] * m2.m[3][0];
+	result.m[3][0] = m1.m[3][0] * m2.m[0][0] + m1.m[3][1] * m2.m[1][0] + m1.m[3][2] * m2.m[2][0] + m1.m[3][3] * m2.m[3][0];
+
+	result.m[0][1] = m1.m[0][0] * m2.m[0][1] + m1.m[0][1] * m2.m[1][1] + m1.m[0][2] * m2.m[2][1] + m1.m[0][3] * m2.m[3][1];
+	result.m[1][1] = m1.m[1][0] * m2.m[0][1] + m1.m[1][1] * m2.m[1][1] + m1.m[1][2] * m2.m[2][1] + m1.m[1][3] * m2.m[3][1];
+	result.m[2][1] = m1.m[2][0] * m2.m[0][1] + m1.m[2][1] * m2.m[1][1] + m1.m[2][2] * m2.m[2][1] + m1.m[2][3] * m2.m[3][1];
+	result.m[3][1] = m1.m[3][0] * m2.m[0][1] + m1.m[3][1] * m2.m[1][1] + m1.m[3][2] * m2.m[2][1] + m1.m[3][3] * m2.m[3][1];
+
+	result.m[0][2] = m1.m[0][0] * m2.m[0][2] + m1.m[0][1] * m2.m[1][2] + m1.m[0][2] * m2.m[2][2] + m1.m[0][3] * m2.m[3][2];
+	result.m[1][2] = m1.m[1][0] * m2.m[0][2] + m1.m[1][1] * m2.m[1][2] + m1.m[1][2] * m2.m[2][2] + m1.m[1][3] * m2.m[3][2];
+	result.m[2][2] = m1.m[2][0] * m2.m[0][2] + m1.m[2][1] * m2.m[1][2] + m1.m[2][2] * m2.m[2][2] + m1.m[2][3] * m2.m[3][2];
+	result.m[3][2] = m1.m[3][0] * m2.m[0][2] + m1.m[3][1] * m2.m[1][2] + m1.m[3][2] * m2.m[2][2] + m1.m[3][3] * m2.m[3][2];
+
+	result.m[0][3] = m1.m[0][0] * m2.m[0][3] + m1.m[0][1] * m2.m[1][3] + m1.m[0][2] * m2.m[2][3] + m1.m[0][3] * m2.m[3][3];
+	result.m[1][3] = m1.m[1][0] * m2.m[0][3] + m1.m[1][1] * m2.m[1][3] + m1.m[1][2] * m2.m[2][3] + m1.m[1][3] * m2.m[3][3];
+	result.m[2][3] = m1.m[2][0] * m2.m[0][3] + m1.m[2][1] * m2.m[1][3] + m1.m[2][2] * m2.m[2][3] + m1.m[2][3] * m2.m[3][3];
+	result.m[3][3] = m1.m[3][0] * m2.m[0][3] + m1.m[3][1] * m2.m[1][3] + m1.m[3][2] * m2.m[2][3] + m1.m[3][3] * m2.m[3][3];
+	return result;
+}
+
 Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate)
 {
 #pragma region
@@ -218,7 +243,7 @@ Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Ve
 	//resultRZ.m[3][3] = 1;
 
 	////=========================
-	//rotateXYZMatrix = Multiply(Multiply(resultRX,resultRY), resultRZ);//‘S²‚Ì‰ñ“]s—ñ
+	//rotateXYZMatrix = Multiply(Multiply(resultRX,resultRY), resultRZ);//å…¨è»¸ã®å›è»¢è¡Œåˆ—
 
 
 	////=========================
@@ -264,32 +289,9 @@ Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Ve
 	return result;
 }
 
-Matrix4x4 MultiplyMat(const Matrix4x4& m1, const Matrix4x4& m2)
-{
-	Matrix4x4 result;
-	result.m[0][0] = m1.m[0][0] * m2.m[0][0] + m1.m[0][1] * m2.m[1][0] + m1.m[0][2] * m2.m[2][0] + m1.m[0][3] * m2.m[3][0];
-	result.m[1][0] = m1.m[1][0] * m2.m[0][0] + m1.m[1][1] * m2.m[1][0] + m1.m[1][2] * m2.m[2][0] + m1.m[1][3] * m2.m[3][0];
-	result.m[2][0] = m1.m[2][0] * m2.m[0][0] + m1.m[2][1] * m2.m[1][0] + m1.m[2][2] * m2.m[2][0] + m1.m[2][3] * m2.m[3][0];
-	result.m[3][0] = m1.m[3][0] * m2.m[0][0] + m1.m[3][1] * m2.m[1][0] + m1.m[3][2] * m2.m[2][0] + m1.m[3][3] * m2.m[3][0];
 
-	result.m[0][1] = m1.m[0][0] * m2.m[0][1] + m1.m[0][1] * m2.m[1][1] + m1.m[0][2] * m2.m[2][1] + m1.m[0][3] * m2.m[3][1];
-	result.m[1][1] = m1.m[1][0] * m2.m[0][1] + m1.m[1][1] * m2.m[1][1] + m1.m[1][2] * m2.m[2][1] + m1.m[1][3] * m2.m[3][1];
-	result.m[2][1] = m1.m[2][0] * m2.m[0][1] + m1.m[2][1] * m2.m[1][1] + m1.m[2][2] * m2.m[2][1] + m1.m[2][3] * m2.m[3][1];
-	result.m[3][1] = m1.m[3][0] * m2.m[0][1] + m1.m[3][1] * m2.m[1][1] + m1.m[3][2] * m2.m[2][1] + m1.m[3][3] * m2.m[3][1];
 
-	result.m[0][2] = m1.m[0][0] * m2.m[0][2] + m1.m[0][1] * m2.m[1][2] + m1.m[0][2] * m2.m[2][2] + m1.m[0][3] * m2.m[3][2];
-	result.m[1][2] = m1.m[1][0] * m2.m[0][2] + m1.m[1][1] * m2.m[1][2] + m1.m[1][2] * m2.m[2][2] + m1.m[1][3] * m2.m[3][2];
-	result.m[2][2] = m1.m[2][0] * m2.m[0][2] + m1.m[2][1] * m2.m[1][2] + m1.m[2][2] * m2.m[2][2] + m1.m[2][3] * m2.m[3][2];
-	result.m[3][2] = m1.m[3][0] * m2.m[0][2] + m1.m[3][1] * m2.m[1][2] + m1.m[3][2] * m2.m[2][2] + m1.m[3][3] * m2.m[3][2];
-
-	result.m[0][3] = m1.m[0][0] * m2.m[0][3] + m1.m[0][1] * m2.m[1][3] + m1.m[0][2] * m2.m[2][3] + m1.m[0][3] * m2.m[3][3];
-	result.m[1][3] = m1.m[1][0] * m2.m[0][3] + m1.m[1][1] * m2.m[1][3] + m1.m[1][2] * m2.m[2][3] + m1.m[1][3] * m2.m[3][3];
-	result.m[2][3] = m1.m[2][0] * m2.m[0][3] + m1.m[2][1] * m2.m[1][3] + m1.m[2][2] * m2.m[2][3] + m1.m[2][3] * m2.m[3][3];
-	result.m[3][3] = m1.m[3][0] * m2.m[0][3] + m1.m[3][1] * m2.m[1][3] + m1.m[3][2] * m2.m[2][3] + m1.m[3][3] * m2.m[3][3];
-	return result;
-}
-
-//³Ë‰es—ñ
+//æ­£å°„å½±è¡Œåˆ—
 Matrix4x4 MakeOrthographicMatrix(float left, float top, float right, float bottom, float nearClip, float farClip)
 {
 	Matrix4x4 result;
@@ -316,7 +318,7 @@ Matrix4x4 MakeOrthographicMatrix(float left, float top, float right, float botto
 	return result;
 }
 
-//“§‹“Š‰es—ñ aspectratio=ƒAƒXƒyƒNƒg”ä FOV(FieldOfview)=
+//é€è¦–æŠ•å½±è¡Œåˆ— aspectratio=ã‚¢ã‚¹ãƒšã‚¯ãƒˆæ¯” FOV(FieldOfview)=
 Matrix4x4 MakePerspectiveFovMatrix(float fovY, float aspectRatio, float nearClip, float farClip)
 {
 	Matrix4x4 result;
@@ -344,7 +346,7 @@ Matrix4x4 MakePerspectiveFovMatrix(float fovY, float aspectRatio, float nearClip
 	return result;
 }
 
-//ƒrƒ…[ƒ|[ƒg•ÏŠ·s—ñ
+//ãƒ“ãƒ¥ãƒ¼ãƒãƒ¼ãƒˆå¤‰æ›è¡Œåˆ—
 Matrix4x4 MakeViewPortMatrix(
 	const float& left,
 	const float& top,
@@ -434,36 +436,36 @@ void DrawSphere(const Sphere& sphere, const Matrix4x4& viewProjectionMat, const 
 	float pi = std::numbers::pi_v<float>;
 	const uint32_t kSubdivision = 12;
 
-	//Œo“x•ªŠ„‚P‚Â•ª‚ÌŠp“x
+	//çµŒåº¦åˆ†å‰²ï¼‘ã¤åˆ†ã®è§’åº¦
 	const float kLonEvery = pi * 2.0f / float(kSubdivision);
-	//ˆÜ“x•ªŠ„‚P‚Â•ª‚ÌŠp“x
+	//ç·¯åº¦åˆ†å‰²ï¼‘ã¤åˆ†ã®è§’åº¦
 	const float kLatEvery = pi / float(kSubdivision);
 
-	//ˆÜ“x‚Ì•ûŒü‚É•ªŠ„
+	//ç·¯åº¦ã®æ–¹å‘ã«åˆ†å‰²
 	for (uint32_t latIndex = 0; latIndex < kSubdivision; ++latIndex) {
 		float lat = -pi / 2.0f + kLatEvery * latIndex;
-		//Œo“x‚Ì•ûŒü‚É•ªŠ„‚µ‚È‚ª‚çü‚ğ•`‚­
+		//çµŒåº¦ã®æ–¹å‘ã«åˆ†å‰²ã—ãªãŒã‚‰ç·šã‚’æã
 		for (uint32_t lonIndex = 0; lonIndex < kSubdivision; ++lonIndex) {
 			float lon = lonIndex * kLonEvery;
 
 			Vector3 a = {
-				sphere.center.x + sphere.radius * std::cosf(lat) * std::cosf(lat),
+				sphere.center.x + sphere.radius * std::cosf(lat) * std::cosf(lon),
 				sphere.center.y + sphere.radius * std::sinf(lat),
-				sphere.center.z + sphere.radius * std::cosf(lat) * std::sinf(lat),
+				sphere.center.z + sphere.radius * std::cosf(lat) * std::sinf(lon),
 			};
 
 			Vector3 b = {
-				sphere.center.x + sphere.radius * std::cosf(lat + kLatEvery) * std::cosf(lat),
+				sphere.center.x + sphere.radius * std::cosf(lat + kLatEvery) * std::cosf(lon),
 				sphere.center.y + sphere.radius * std::sinf(lat + kLatEvery),
-				sphere.center.z + sphere.radius * std::cosf(lat + kLatEvery) * std::sinf(lat),
+				sphere.center.z + sphere.radius * std::cosf(lat + kLatEvery) * std::sinf(lon),
 			};
 
 			Vector3 c = {
-				sphere.center.x + sphere.radius * std::cosf(lat) * std::cosf(lat),
+				sphere.center.x + sphere.radius * std::cosf(lat) * std::cosf(lon+kLonEvery),
 				sphere.center.y + sphere.radius * std::sinf(lat),
-				sphere.center.z + sphere.radius * std::cosf(lat) * std::sinf(lat) };
+				sphere.center.z + sphere.radius * std::cosf(lat) * std::sinf(lon+kLonEvery) };
 
-			//ü‚ğ•`‚­
+			//ç·šã‚’æã
 			Vector3 screenA = Transform(Transform(a, viewProjectionMat), viewportMat);
 			Vector3 screenB = Transform(Transform(b, viewProjectionMat), viewportMat);
 			Vector3 screenC = Transform(Transform(c, viewProjectionMat), viewportMat);
@@ -509,22 +511,22 @@ void DrawGrid(const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewPortMa
 
 
 struct Segment {
-	Vector3 origin;//n“_
-	Vector3 diff;//I“_‚Ö‚Ì·•ªƒxƒNƒgƒ‹
+	Vector3 origin;//å§‹ç‚¹
+	Vector3 diff;//çµ‚ç‚¹ã¸ã®å·®åˆ†ãƒ™ã‚¯ãƒˆãƒ«
 };
 
 float Dot(const Vector3& v1, const Vector3& v2) {
 	return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
 }
 
-//ƒxƒNƒgƒ‹Ë‰e
+//ãƒ™ã‚¯ãƒˆãƒ«å°„å½±
 Vector3 Project(const Vector3& v1, const Vector3& v2) {
 	float v25qLength = Dot(v2, v2);
 	float dot = Dot(v1, v2);
 	return Multiply(dot / v25qLength, v2);
 }
 
-//Å‹ßÚ“_‚ğ‹‚ß‚é
+//æœ€è¿‘æ¥ç‚¹ã‚’æ±‚ã‚ã‚‹
 Vector3 ClosestPoint(const Vector3& point, const Segment& segment) {
 	Vector3 v = Subtract(point, segment.origin);
 	float t = Dot(v, segment.diff) / Dot(segment.diff, segment.diff);
