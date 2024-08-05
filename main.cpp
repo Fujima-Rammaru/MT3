@@ -1,5 +1,5 @@
 #include <Novice.h>
-
+#include "MT3.h"
 const char kWindowTitle[] = "GC2A_10_フジマ_ランマル_MT3";
 
 // Windowsアプリでのエントリーポイント(main関数)
@@ -32,7 +32,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 		/// ↓描画処理ここから
 		///
-
+		
 		///
 		/// ↑描画処理ここまで
 		///
