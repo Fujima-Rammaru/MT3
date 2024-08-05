@@ -121,10 +121,10 @@ Matrix4x4 MakeRotateYMatrix(float radian)
 
 Matrix4x4 MakeRotateZMatrix(float radian)
 {
-	float costheta = std::cosf(radian);
-	float sintheta = std::sinf(radian);
-	return { costheta,sintheta,0.0f,0.0f,
-		-sintheta,costheta,0.0f,0.0f,
+	float cosTheta = std::cosf(radian);
+	float sinTheta = std::sinf(radian);
+	return { cosTheta,sinTheta,0.0f,0.0f,
+		-sinTheta,cosTheta,0.0f,0.0f,
 		0.0f,0.0f,1.0f,0.0f,
 		0.0f,0.0f,0.0f,1.0f };
 }
@@ -417,7 +417,6 @@ Vector3 Cross(const Vector3& v1, const Vector3& v2)
 	);
 }
 
-
 struct Sphere {
 	Vector3 center;
 	float radius;
@@ -509,6 +508,7 @@ struct Segment {
 struct Spherical {
 	float theta;
 	float phi;
+	float z;
 };
 
 struct Camera {
@@ -536,3 +536,31 @@ Vector3 ClosestPoint(const Vector3& point, const Segment& segment) {
 	return Add(segment.origin, Multiply(t, segment.diff));
 }
 
+Vector3 ToCartesian(const Spherical& cam) {
+	Vector3 result;
+
+
+	return result;
+};
+
+Matrix4x4 InverseAffine(const Matrix4x4& m1) {
+	Matrix4x4 result;
+
+	result = Inverse(m1);
+
+
+
+	return result;
+};
+
+Matrix4x4 CalcViewMatrix(const Camera& camera) {
+	Vector3 offset = ToCartesian(camera.spherical);
+
+	Matrix4x4 viewMatrix = MultiplyMat(MakeRotateXMatrix(camera.spherical.theta), MakeRotateYMatrix(-camera.spherical.phi));
+
+	viewMatrix.m[3][0] = offset.x + camera.center.x;
+	viewMatrix.m[3][1] = offset.y + camera.center.y;
+	viewMatrix.m[3][2] = offset.z + camera.center.z;
+
+	return;
+}
