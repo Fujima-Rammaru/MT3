@@ -515,6 +515,16 @@ struct Segment {
 	Vector3 diff;//終点への差分ベクトル
 };
 
+struct Spherical {
+	float theta;
+	float phi;
+};
+
+struct Camera {
+	Vector3 center;//中心
+	Spherical spherical;//球状
+};
+
 float Dot(const Vector3& v1, const Vector3& v2) {
 	return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
 }
@@ -533,4 +543,11 @@ Vector3 ClosestPoint(const Vector3& point, const Segment& segment) {
 	t = std::clamp(t, 0.0f, 1.0f);
 	return Add(segment.origin, Multiply(t, segment.diff));
 }
+
+Vector3 ToCartesian(const Vector3& v1) {
+	Vector3 result;
+
+
+	return result;
+};
 
