@@ -5,6 +5,7 @@
 #include<assert.h>
 #include<algorithm> 
 #include<numbers> 
+#include"Novice.h"
 
 Vector3 Add(const Vector3& v1, const Vector3& v2) {
 	Vector3 result;
@@ -456,13 +457,53 @@ void DrawSphere(const Sphere& sphere, const Matrix4x4& viewProjectionMat, const 
 				sphere.center.y + sphere.radius * std::sinf(lat + kLatEvery),
 				sphere.center.z + sphere.radius * std::cosf(lat + kLatEvery) * std::sinf(lat),
 			};
-			//================================================================================
+
 			Vector3 c = {
 				sphere.center.x + sphere.radius * std::cosf(lat) * std::cosf(lat),
 				sphere.center.y + sphere.radius * std::sinf(lat),
-				sphere.center.z + sphere.radius * std::cosf(lat) * std::sinf(lat),
-			};
+				sphere.center.z + sphere.radius * std::cosf(lat) * std::sinf(lat) };
+
+			//ê¸Çï`Ç≠
+			Vector3 screenA = Transform(Transform(a, viewProjectionMat), viewportMat);
+			Vector3 screenB = Transform(Transform(b, viewProjectionMat), viewportMat);
+			Vector3 screenC = Transform(Transform(c, viewProjectionMat), viewportMat);
+			Novice::DrawLine(int(screenA.x), int(screenA.y), int(screenB.x), int(screenB.y), color);
+			Novice::DrawLine(int(screenA.x), int(screenA.y), int(screenC.x), int(screenC.y), color);
 		}
+	}
+}
+
+void DrawGrid(const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewPortMatrix) {
+	const float kGridHalfWidth = 2.0f;
+	const uint32_t kSubdivision = 10;
+	const float kGridEvery = (kGridHalfWidth * 2.0f) / float(kSubdivision);
+
+	for (uint32_t xIndex = 0; xIndex <= kSubdivision; ++xIndex) {
+		float x = -kGridHalfWidth + (xIndex * kGridEvery);
+		Vector3 start{ x,0.0f,-kGridHalfWidth };
+		Vector3 end{ x,0.0f,kGridHalfWidth };
+
+		Vector3 startScreen = Transform(Transform(start, viewProjectionMatrix), viewPortMatrix);
+		Vector3 endScreen = Transform(Transform(end, viewProjectionMatrix), viewPortMatrix);
+
+		Novice::DrawLine(
+			int(startScreen.x), int(startScreen.y),
+			int(endScreen.x), int(endScreen.y),
+			x == 0.0f ? BLACK : 0xAAAAAAFF);
+	}
+
+	for (uint32_t zIndex = 0; zIndex <= kSubdivision; ++zIndex) {
+		float z = -kGridHalfWidth + (zIndex * kGridEvery);
+		Vector3 start{-kGridHalfWidth,0.0f,z};
+		Vector3 end{kGridHalfWidth,0.0f,z };
+
+		Vector3 startScreen = Transform(Transform(start, viewProjectionMatrix), viewPortMatrix);
+		Vector3 endScreen = Transform(Transform(end, viewProjectionMatrix), viewPortMatrix);
+
+		Novice::DrawLine(
+			int(startScreen.x), int(startScreen.y),
+			int(endScreen.x), int(endScreen.y),
+			z == 0.0f ? BLACK : 0xAAAAAAFF);
 	}
 }
 
