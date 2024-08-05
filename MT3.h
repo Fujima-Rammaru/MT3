@@ -343,13 +343,7 @@ Matrix4x4 MakePerspectiveFovMatrix(float fovY, float aspectRatio, float nearClip
 }
 
 //ビューポート変換行列
-Matrix4x4 MakeViewPortMatrix(
-	const float& left,
-	const float& top,
-	const float& width,
-	const float& height,
-	const float& minDepth,
-	const float& maxDepth)
+Matrix4x4 MakeViewPortMatrix(const float& left,const float& top,const float& width,const float& height,const float& minDepth,const float& maxDepth)
 {
 	Matrix4x4 result;
 	result.m[0][0] = width / 2;
