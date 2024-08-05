@@ -6,6 +6,9 @@ const char kWindowTitle[] = "GC2A_10_フジマ_ランマル_MT3";
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	// ライブラリの初期化
+	const int kWindowWidth = 720;
+	const int kWindowHeight = 720;
+
 	Novice::Initialize(kWindowTitle, 1280, 720);
 
 	Vector3 rotate{ 0.0f, 0.0f, 0.0f };//回転
@@ -16,8 +19,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Vector3 translate2{ 0.0f, 0.0f, 0.0f };//移動
 
 	Vector3 cameraScale{ 1.0f, 1.0f, 1.0f };//拡縮
-	Vector3 cameraRotate{ 0.0f, 0.0f, 0.0f };
-	Vector3 cameraTranslate{ 0.0f,0.0f,-0.5f };
+	Vector3 cameraRotate{ 0.26f, 0.0f, 0.0f };
+	Vector3 cameraTranslate{ 0.0f,1.9f,-6.49f };
 	Matrix4x4 worldMatrix;
 
 	Matrix4x4 cameraMatrix;
@@ -28,9 +31,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Matrix4x4 worldViewProjectionMatrix;
 	Matrix4x4 viewPortMatrix;
 
+	Sphere sphere = {
+		{0.0f,0.0f,0.0f},2.0f
+	};
+
 	// キー入力結果を受け取る箱
-	char keys[256] = {0};
-	char preKeys[256] = {0};
+	char keys[256] = { 0 };
+	char preKeys[256] = { 0 };
 
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0) {
@@ -44,6 +51,17 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 		/// ↓更新処理ここから
 		///
+		//各種行列の計算(レンダリングパイプライン)
+		worldMatrix = MakeAffineMatrix(scale, rotate, translate);
+		cameraMatrix = MakeAffineMatrix(cameraScale, cameraRotate, { 0,0,-0.5f });//カメラ行列
+		viewMatrix = Inverse(cameraMatrix);//カメラのビュー行列
+
+
+		//透視投影行列(同次クリップ空間)
+		projectionMatrix = MakePerspectiveFovMatrix(0.45f, float(kWindowWidth) / float(kWindowHeight), 0.1f, 100.0f);
+		worldViewProjectionMatrix = MultiplyMat(worldMatrix, MultiplyMat(viewMatrix, projectionMatrix));
+		viewPortMatrix = MakeViewPortMatrix(0, 0, float(kWindowWidth), float(kWindowHeight), 0.0f, 1.0f);
+
 
 		///
 		/// ↑更新処理ここまで
@@ -52,7 +70,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 		/// ↓描画処理ここから
 		///
-		
+
 		///
 		/// ↑描画処理ここまで
 		///

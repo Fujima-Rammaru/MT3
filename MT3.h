@@ -24,7 +24,7 @@ Vector3 Subtract(const Vector3& v1, const Vector3& v2) {
 	return result;
 }
 
-Vector3 Multiply(float scalar, const Vector3& v) {
+Vector3 MultiplyVector(float scalar, const Vector3& v) {
 	Vector3 result;
 	result.x = scalar * v.x;
 	result.y = scalar * v.y;
