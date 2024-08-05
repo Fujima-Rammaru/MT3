@@ -8,6 +8,26 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	// ライブラリの初期化
 	Novice::Initialize(kWindowTitle, 1280, 720);
 
+	Vector3 rotate{ 0.0f, 0.0f, 0.0f };//回転
+	Vector3 translate{ 0.0f, 0.0f, 0.0f };//移動
+	Vector3 scale{ 1.0f, 1.0f, 1.0f };//拡縮
+
+	Vector3    rotate2{ 0.0f, 0.0f, 0.0f };//回転
+	Vector3 translate2{ 0.0f, 0.0f, 0.0f };//移動
+
+	Vector3 cameraScale{ 1.0f, 1.0f, 1.0f };//拡縮
+	Vector3 cameraRotate{ 0.0f, 0.0f, 0.0f };
+	Vector3 cameraTranslate{ 0.0f,0.0f,-0.5f };
+	Matrix4x4 worldMatrix;
+
+	Matrix4x4 cameraMatrix;
+	Matrix4x4 viewMatrix;//カメラのビュー行列
+
+	//透視投影行列(同次クリップ空間)
+	Matrix4x4 projectionMatrix;
+	Matrix4x4 worldViewProjectionMatrix;
+	Matrix4x4 viewPortMatrix;
+
 	// キー入力結果を受け取る箱
 	char keys[256] = {0};
 	char preKeys[256] = {0};
