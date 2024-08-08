@@ -26,9 +26,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	Sphere spheres[2];
 	spheres[0].center = { 0,0,0 };
-	spheres[1].center = { 0.5f,0.2f,0.2f };
+	spheres[1].center = { 0.7f,0.0f,0.0f };
 	spheres[0].radius = 0.5f;
 	spheres[1].radius = 0.5f;
+	uint32_t sphereColor = WHITE;
 	// キー入力結果を受け取る箱
 	char keys[256] = { 0 };
 	char preKeys[256] = { 0 };
@@ -45,7 +46,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 		/// ↓更新処理ここから
 		///
-
+		if (IsCollision(spheres[0], spheres[1])) {
+			sphereColor = RED;
+		}
+		else {
+			sphereColor = WHITE;
+		}
 		///
 		/// ↑更新処理ここまで
 		///
@@ -54,19 +60,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// ↓描画処理ここから
 		///
 		DrawGrid(worldviewProjectionMatrix, viewportMatrix);
-
+		DrawSphere(spheres[0], worldviewProjectionMatrix, viewportMatrix, sphereColor);
 		DrawSphere(spheres[1], worldviewProjectionMatrix, viewportMatrix, WHITE);
-
-		if (IsCollision(spheres[0], spheres[1])) {
-			DrawSphere(spheres[0], worldviewProjectionMatrix, viewportMatrix, RED);
-
-		}
-		else {
-			DrawSphere(spheres[0], worldviewProjectionMatrix, viewportMatrix, WHITE);
-		}
 		ImGui::Begin("Window");
 		ImGui::DragFloat3("sphere1Center", &spheres[0].center.x, 0.01f);
 		ImGui::DragFloat("sphere1Radius", &spheres[0].radius, 0.01f);
+
 		ImGui::DragFloat3("sphere2Center", &spheres[1].center.x, 0.01f);
 		ImGui::DragFloat("sphere2Radius", &spheres[1].radius, 0.01f);
 		ImGui::End();
