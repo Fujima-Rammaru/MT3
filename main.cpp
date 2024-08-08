@@ -7,10 +7,10 @@ const char kWindowTitle[] = "GC2A_10_フジマ_ランマル_MT3";
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	// ライブラリの初期化
-	const int kWindowWidth = 720;
+	const int kWindowWidth = 1280;
 	const int kWindowHeight = 720;
 
-	Novice::Initialize(kWindowTitle, 1280, 720);
+	Novice::Initialize(kWindowTitle, kWindowWidth,kWindowHeight);
 
 	Vector3 rotate{ 0.0f, 0.0f, 0.0f };//回転
 	Vector3 translate{ 0.0f, 0.0f, 0.0f };//移動
@@ -55,13 +55,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		cameraMatrix = MakeAffineMatrix(cameraScale, cameraRotate, cameraTranslate);//カメラ行列
 		viewMatrix = Inverse(cameraMatrix);//カメラのビュー行列
 
-
 		//透視投影行列(同次クリップ空間)
 		projectionMatrix = MakePerspectiveFovMatrix(0.45f, float(kWindowWidth) / float(kWindowHeight), 0.1f, 100.0f);
 		worldViewProjectionMatrix = MultiplyMat(worldMatrix, MultiplyMat(viewMatrix, projectionMatrix));
 		viewPortMatrix = MakeViewPortMatrix(0, 0, float(kWindowWidth), float(kWindowHeight), 0.0f, 1.0f);
-
-
 		///
 		/// ↑更新処理ここまで
 		///
@@ -75,7 +72,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		ImGui::Begin("window");
 		ImGui::DragFloat3("CameraTranslate", &cameraTranslate.x, 0.01f);
 		ImGui::DragFloat3("CameraRotate", &cameraRotate.x, 0.01f);
-
 		ImGui::DragFloat3("SphereCenter", &sphere.center.x, 0.01f);
 		ImGui::DragFloat("SphereRadius", &sphere.radius, 0.01f);
 		ImGui::End();
