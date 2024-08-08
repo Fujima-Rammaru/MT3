@@ -57,11 +57,11 @@ Matrix4x4 MatrixFunction::MakeScaleMatrix(const Vector3& scale)
 Vector3 MatrixFunction::Transform(const Vector3& vector, const Matrix4x4& matrix)
 {
 	Vector3 result;
-
+	float w;
 	result.x = vector.x * matrix.m[0][0] + vector.y * matrix.m[1][0] + vector.z * matrix.m[2][0] + 1.0f * matrix.m[3][0];
 	result.y = vector.x * matrix.m[0][1] + vector.y * matrix.m[1][1] + vector.z * matrix.m[2][1] + 1.0f * matrix.m[3][1];
 	result.z = vector.x * matrix.m[0][2] + vector.y * matrix.m[1][2] + vector.z * matrix.m[2][2] + 1.0f * matrix.m[3][2];
-	float w = vector.x * matrix.m[0][3] + vector.y * matrix.m[1][3] + vector.z * matrix.m[2][3] + 1.0f * matrix.m[3][3];
+	w = vector.x * matrix.m[0][3] + vector.y * matrix.m[1][3] + vector.z * matrix.m[2][3] + 1.0f * matrix.m[3][3];
 	assert(w != 0.0f);
 	result.x /= w;
 	result.y /= w;
@@ -213,24 +213,28 @@ Matrix4x4 MatrixFunction::MakeAffineMatrix(const Vector3& scale, const Vector3& 
 	//result1.m[3][3] = 1;
 	//return result1;
 #pragma endregion
-	Matrix4x4 result = Multiply(Multiply(MakeRotateYMatrix(rotate.y), MakeRotateXMatrix(rotate.x)), MakeRotateZMatrix(rotate.z));
+	Matrix4x4 result;
+	Matrix4x4 rotateXYZMatrix = Multiply(Multiply(MakeRotateYMatrix(rotate.y), MakeRotateXMatrix(rotate.x)), MakeRotateZMatrix(rotate.z));
 
-	result.m[0][0] *= scale.x;
-	result.m[0][1] *= scale.x;
-	result.m[0][2] *= scale.x;
+	result.m[0][0] = scale.x * rotateXYZMatrix.m[0][0];
+	result.m[0][1] = scale.x * rotateXYZMatrix.m[0][1];
+	result.m[0][2] = scale.x * rotateXYZMatrix.m[0][2];
+	result.m[0][3] = 0;
 
-	result.m[1][0] *= scale.y;
-	result.m[1][1] *= scale.y;
-	result.m[1][2] *= scale.y;
+	result.m[1][0] = scale.y * rotateXYZMatrix.m[1][0];
+	result.m[1][1] = scale.y * rotateXYZMatrix.m[1][1];
+	result.m[1][2] = scale.y * rotateXYZMatrix.m[1][2];
+	result.m[1][3] = 0;
 
-	result.m[2][0] *= scale.z;
-	result.m[2][1] *= scale.z;
-	result.m[2][2] *= scale.z;
+	result.m[2][0] = scale.z * rotateXYZMatrix.m[2][0];
+	result.m[2][1] = scale.z * rotateXYZMatrix.m[2][1];
+	result.m[2][2] = scale.z * rotateXYZMatrix.m[2][2];
+	result.m[2][3] = 0;
 
 	result.m[3][0] = translate.x;
 	result.m[3][1] = translate.y;
 	result.m[3][2] = translate.z;
-
+	result.m[3][3] = 1;
 	return result;
 }
 
@@ -291,7 +295,7 @@ Matrix4x4 MatrixFunction::MakePerspectiveFovMatrix(float fovY, float aspectRatio
 {
 	Matrix4x4 result;
 	float cot = 1 / std::tan(fovY / 2);
-	result.m[0][0] = cot/aspectRatio;
+	result.m[0][0] = 1 / aspectRatio*cot;
 	result.m[0][1] = 0;
 	result.m[0][2] = 0;
 	result.m[0][3] = 0;
@@ -308,7 +312,7 @@ Matrix4x4 MatrixFunction::MakePerspectiveFovMatrix(float fovY, float aspectRatio
 
 	result.m[3][0] = 0;
 	result.m[3][1] = 0;
-	result.m[3][2] = -(nearClip * farClip) / (farClip - nearClip);
+	result.m[3][2] = -nearClip * farClip / (farClip - nearClip);
 	result.m[3][3] = 0;
 
 	return result;
@@ -339,8 +343,8 @@ Matrix4x4 MatrixFunction::MakeViewPortMatrix(
 	result.m[2][2] = maxDepth - minDepth;
 	result.m[2][3] = 0;
 
-	result.m[3][0] = left + width / 2;
-	result.m[3][1] = top + height / 2;
+	result.m[3][0] = left + (width / 2);
+	result.m[3][1] = top + (height / 2);
 	result.m[3][2] = minDepth;
 	result.m[3][3] = 1;
 

@@ -35,7 +35,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	MatrixFunction* matFunc;
 	matFunc = new MatrixFunction;
 
-	const int kWindowWidth = 720;
+	const int kWindowWidth = 1280;
 	const int kWindowHeight = 720;
 
 	// ライブラリの初期化
@@ -47,14 +47,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	Vector3 rotate{ 0.0f, 0.0f, 0.0f };//回転
 	Vector3 translate{ 0.0f, 0.0f, 0.0f };//移動
-	Vector3 scale{ 1.0f, 1.0f, 1.0f };//拡縮
-
-	Vector3    rotate2{ 0.0f, 0.0f, 0.0f };//回転
-	Vector3 translate2{ 0.0f, 0.0f, 0.0f };//移動
+	Vector3 scale{ 0.125f, 0.125f, 0.125f };//拡縮
 
 	Vector3 cameraScale{ 1.0f, 1.0f, 1.0f };//拡縮
 	Vector3 cameraRotate{ 0.0f, 0.0f, 0.0f };
-	Vector3 cameraTranslate{ 0.0f,0.0f,-0.5f };
+	Vector3 cameraTranslate{ 0.0f,0.0f,-5.0f };
 	Matrix4x4 worldMatrix;
 
 	Matrix4x4 cameraMatrix;
@@ -68,9 +65,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	//Screen空間へと頂点を変換する
 	Vector3 kLocalVertices[3] = {
-		{-0.05f,0.0f,0.1f},
-		{0.0f,0.05f,0.1f},
-		{0.05f,0.0f,0.1f},
+		{0.0f,0.5f,0.0f},
+		{0.5f,-0.5f,0.0f},
+		{-0.5f,-0.5f,0.0f},
 	};//ローカル座標
 
 	// キー入力結果を受け取る箱
@@ -89,7 +86,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 		/// ↓更新処理ここから
 		///
-
+		rotate.y += 0.04f;
 		if (Novice::CheckHitKey(DIK_A)) {
 			translate.x -= 0.001f;
 		}
@@ -104,19 +101,18 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			translate.z -= 0.001f;
 		}
 
-		
-		rotate.y += 0.01f;
+
+
 		//各種行列の計算(レンダリングパイプライン)
 		worldMatrix = matFunc->MakeAffineMatrix(scale, rotate, translate);
-		cameraMatrix = matFunc->MakeAffineMatrix(cameraScale, cameraRotate,{0,0,-0.5f});//カメラ行列
+		cameraMatrix = matFunc->MakeAffineMatrix(cameraScale, cameraRotate, { 0,0,-0.5f });//カメラ行列
 		viewMatrix = matFunc->Inverse(cameraMatrix);//カメラのビュー行列
-		
 
 		//透視投影行列(同次クリップ空間)
 		projectionMatrix = matFunc->MakePerspectiveFovMatrix(0.45f, float(kWindowWidth) / float(kWindowHeight), 0.1f, 100.0f);
-		worldViewProjectionMatrix = matFunc->Multiply(worldMatrix,matFunc->Multiply(viewMatrix, projectionMatrix));
+		worldViewProjectionMatrix = matFunc->Multiply(worldMatrix, matFunc->Multiply(viewMatrix, projectionMatrix));
 		viewPortMatrix = matFunc->MakeViewPortMatrix(0, 0, float(kWindowWidth), float(kWindowHeight), 0.0f, 1.0f);
-		
+
 		Vector3 screenVertices1[3] = {
 matFunc->Transform(matFunc->Transform(kLocalVertices[0],worldViewProjectionMatrix),viewPortMatrix),
 matFunc->Transform(matFunc->Transform(kLocalVertices[1],worldViewProjectionMatrix),viewPortMatrix),
@@ -141,7 +137,7 @@ matFunc->Transform(matFunc->Transform(kLocalVertices[2],worldViewProjectionMatri
 			int(screenVertices1[1].y),
 			int(screenVertices1[2].x),
 			int(screenVertices1[2].y),
-			RED,kFillModeWireFrame
+			RED, kFillModeSolid
 		);
 		///
 		/// ↑描画処理ここまで
