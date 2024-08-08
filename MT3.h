@@ -439,6 +439,7 @@ Vector3 Perpendicular(const Vector3& vector)
 	return { 0.0f,-vector.z,vector.y };
 }
 
+//平面の描画
 void DrawPlane(const Plane& plane, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewPortMatrix, uint32_t color)
 {
 	Vector3 center = Multiply(plane.distance, plane.normal);
@@ -482,6 +483,7 @@ bool IsCollision(const Segment& segment, const Plane& plane) {
 	return false;
 }
 
+//直線の描画
 void DrawSegment(const Segment& segment, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, uint32_t color) {
 	Vector3 start = Transform(Transform(segment.origin, viewProjectionMatrix), viewportMatrix);
 	Vector3 end = Transform(Transform(Add(segment.origin, segment.diff), viewProjectionMatrix), viewportMatrix);
