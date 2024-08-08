@@ -212,7 +212,7 @@ Matrix4x4 MakePerspectiveFovMatrix(float fovY, float aspectRatio, float nearClip
 {
 	Matrix4x4 result;
 	float cot = 1 / std::tan(fovY / 2);
-	result.m[0][0] = cot / aspectRatio;
+	result.m[0][0] = 1 / aspectRatio * cot;
 	result.m[0][1] = 0;
 	result.m[0][2] = 0;
 	result.m[0][3] = 0;
@@ -330,21 +330,21 @@ void DrawSphere(const Sphere& sphere, const Matrix4x4& viewProjectionMat, const 
 			float lon = lonIndex * kLonEvery;
 
 			Vector3 a = {
-				sphere.center.x + sphere.radius * std::cosf(lat) * std::cosf(lon),
-				sphere.center.y + sphere.radius * std::sinf(lat),
-				sphere.center.z + sphere.radius * std::cosf(lat) * std::sinf(lon),
+				sphere.center.x + sphere.radius * std::cos(lat) * std::cos(lon),
+				sphere.center.y + sphere.radius * std::sin(lat),
+				sphere.center.z + sphere.radius * std::cos(lat) * std::sin(lon),
 			};
 
 			Vector3 b = {
-				sphere.center.x + sphere.radius * std::cosf(lat + kLatEvery) * std::cosf(lon),
-				sphere.center.y + sphere.radius * std::sinf(lat + kLatEvery),
-				sphere.center.z + sphere.radius * std::cosf(lat + kLatEvery) * std::sinf(lon),
+				sphere.center.x + sphere.radius * std::cos(lat + kLatEvery) * std::cos(lon),
+				sphere.center.y + sphere.radius * std::sin(lat + kLatEvery),
+				sphere.center.z + sphere.radius * std::cos(lat + kLatEvery) * std::sin(lon),
 			};
 
 			Vector3 c = {
-				sphere.center.x + sphere.radius * std::cosf(lat) * std::cosf(lon + kLonEvery),
-				sphere.center.y + sphere.radius * std::sinf(lat),
-				sphere.center.z + sphere.radius * std::cosf(lat) * std::sinf(lon + kLonEvery) };
+				sphere.center.x + sphere.radius * std::cos(lat) * std::cos(lon + kLonEvery),
+				sphere.center.y + sphere.radius * std::sin(lat),
+				sphere.center.z + sphere.radius * std::cos(lat) * std::sin(lon + kLonEvery) };
 
 			//線を描く
 			Vector3 screenA = Transform(Transform(a, viewProjectionMat), viewportMat);
