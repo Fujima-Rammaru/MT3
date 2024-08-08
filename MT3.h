@@ -15,7 +15,7 @@ Vector3 Add(const Vector3& v1, const Vector3& v2) {
 	return result;
 }
 
-//Œ¸Z
+//æ¸›ç®—
 Vector3 Subtract(const Vector3& v1, const Vector3& v2) {
 	Vector3 result;
 	result.x = v1.x - v2.x;
@@ -129,142 +129,7 @@ Matrix4x4 MakeRotateZMatrix(float radian)
 		0.0f,0.0f,0.0f,1.0f };
 }
 
-Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate)
-{
-#pragma region
-	//Matrix4x4 result1;
-	//Matrix4x4 resultScale;
-	//Matrix4x4 resultRX;
-	//Matrix4x4 resultRY;
-	//Matrix4x4 resultRZ;
-	//Matrix4x4 rotateXYZMatrix;
-
-	//
-	//resultScale.m[0][0] = scale.x;
-	//resultScale.m[0][1] = 0;
-	//resultScale.m[0][2] = 0;
-	//resultScale.m[0][3] = 0;
-	//resultScale.m[1][0] = 0;
-	//resultScale.m[1][1] = scale.y;
-	//resultScale.m[1][2] = 0;
-	//resultScale.m[1][3] = 0;
-	//resultScale.m[2][0] = 0;
-	//resultScale.m[2][1] = 0;
-	//resultScale.m[2][2] = scale.z;
-	//resultScale.m[2][3] = 0;
-	//resultScale.m[3][0] = 0;
-	//resultScale.m[3][1] = 0;
-	//resultScale.m[3][2] = 0;
-	//resultScale.m[3][3] = 1;
-	////===========================
-
-
-	////rotateX
-	////===========================
-	//resultRX.m[0][0] = 1;
-	//resultRX.m[0][1] = 0;
-	//resultRX.m[0][2] = 0;
-	//resultRX.m[0][3] = 0;
-	//resultRX.m[1][0] = 0;
-	//resultRX.m[1][1] = std::cos(rotate.x);
-	//resultRX.m[1][2] = std::sin(rotate.x);
-	//resultRX.m[1][3] = 0;
-	//resultRX.m[2][0] = 0;
-	//resultRX.m[2][1] = -std::sin(rotate.x);
-	//resultRX.m[2][2] = std::cos(rotate.x);
-	//resultRX.m[2][3] = 0;
-	//resultRX.m[3][0] = 0;
-	//resultRX.m[3][1] = 0;
-	//resultRX.m[3][2] = 0;
-	//resultRX.m[3][3] = 1;
-	////rotateY
-	////===========================
-	//resultRY.m[0][0] = std::cos(rotate.y);
-	//resultRY.m[0][1] = 0;
-	//resultRY.m[0][2] = -std::sin(rotate.y);
-	//resultRY.m[0][3] = 0;
-
-	//resultRY.m[1][0] = 0;
-	//resultRY.m[1][1] = 1;
-	//resultRY.m[1][2] = 0;
-	//resultRY.m[1][3] = 0;
-
-	//resultRY.m[2][0] = std::sin(rotate.y);
-	//resultRY.m[2][1] = 0;
-	//resultRY.m[2][2] = std::cos(rotate.y);
-	//resultRY.m[2][3] = 0;
-
-	//resultRY.m[3][0] = 0;
-	//resultRY.m[3][1] = 0;
-	//resultRY.m[3][2] = 0;
-	//resultRY.m[3][3] = 1;
-	////rotateZ
-	////===========================
-	//resultRZ.m[0][0] = std::cos(rotate.z);
-	//resultRZ.m[0][1] = std::sin(rotate.z);
-	//resultRZ.m[0][2] = 0;
-	//resultRZ.m[0][3] = 0;
-	//resultRZ.m[1][0] = -std::sin(rotate.z);
-	//resultRZ.m[1][1] = std::cos(rotate.z);
-	//resultRZ.m[1][2] = 0;
-	//resultRZ.m[1][3] = 0;
-	//resultRZ.m[2][0] = 0;
-	//resultRZ.m[2][1] = 0;
-	//resultRZ.m[2][2] = 1;
-	//resultRZ.m[2][3] = 0;
-	//resultRZ.m[3][0] = 0;
-	//resultRZ.m[3][1] = 0;
-	//resultRZ.m[3][2] = 0;
-	//resultRZ.m[3][3] = 1;
-
-	////=========================
-	//rotateXYZMatrix = Multiply(Multiply(resultRX,resultRY), resultRZ);//‘S²‚Ì‰ñ“]s—ñ
-
-
-	////=========================
-	//result1.m[0][0] = resultScale.m[0][0] * rotateXYZMatrix.m[0][0];
-	//result1.m[0][1] = resultScale.m[0][0] * rotateXYZMatrix.m[0][1];
-	//result1.m[0][2] = resultScale.m[0][0] * rotateXYZMatrix.m[0][2];
-	//result1.m[0][3] = 0;
-
-	//result1.m[1][0] = resultScale.m[1][1] * rotateXYZMatrix.m[1][0];
-	//result1.m[1][1] = resultScale.m[1][1] * rotateXYZMatrix.m[1][1];
-	//result1.m[1][2] = resultScale.m[1][1] * rotateXYZMatrix.m[1][2];
-	//result1.m[1][3] = 0;
-
-	//result1.m[2][0] = resultScale.m[2][2] * rotateXYZMatrix.m[2][0];
-	//result1.m[2][1] = resultScale.m[2][2] * rotateXYZMatrix.m[2][1];
-	//result1.m[2][2] = resultScale.m[2][2] * rotateXYZMatrix.m[2][2];
-	//result1.m[2][3] = 0;
-
-	//result1.m[3][0] = translate.x;
-	//result1.m[3][1] = translate.y;
-	//result1.m[3][2] = translate.z;
-	//result1.m[3][3] = 1;
-	//return result1;
-#pragma endregion
-	Matrix4x4 result = MultiplyMat(MultiplyMat(MakeRotateYMatrix(rotate.y), MakeRotateXMatrix(rotate.x)), MakeRotateZMatrix(rotate.z));
-
-	result.m[0][0] *= scale.x;
-	result.m[0][1] *= scale.x;
-	result.m[0][2] *= scale.x;
-
-	result.m[1][0] *= scale.y;
-	result.m[1][1] *= scale.y;
-	result.m[1][2] *= scale.y;
-
-	result.m[2][0] *= scale.z;
-	result.m[2][1] *= scale.z;
-	result.m[2][2] *= scale.z;
-
-	result.m[3][0] = translate.x;
-	result.m[3][1] = translate.y;
-	result.m[3][2] = translate.z;
-
-	return result;
-}
-
-Matrix4x4 MultiplyMat(const Matrix4x4& m1, const Matrix4x4& m2)
+Matrix4x4 Multiply(const Matrix4x4& m1, const Matrix4x4& m2)
 {
 	Matrix4x4 result;
 	result.m[0][0] = m1.m[0][0] * m2.m[0][0] + m1.m[0][1] * m2.m[1][0] + m1.m[0][2] * m2.m[2][0] + m1.m[0][3] * m2.m[3][0];
@@ -289,7 +154,33 @@ Matrix4x4 MultiplyMat(const Matrix4x4& m1, const Matrix4x4& m2)
 	return result;
 }
 
-//³Ë‰es—ñ
+
+Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate)
+{
+
+	Matrix4x4 result = Multiply(Multiply(MakeRotateYMatrix(rotate.y), MakeRotateXMatrix(rotate.x)), MakeRotateZMatrix(rotate.z));
+
+	result.m[0][0] *= scale.x;
+	result.m[0][1] *= scale.x;
+	result.m[0][2] *= scale.x;
+
+	result.m[1][0] *= scale.y;
+	result.m[1][1] *= scale.y;
+	result.m[1][2] *= scale.y;
+
+	result.m[2][0] *= scale.z;
+	result.m[2][1] *= scale.z;
+	result.m[2][2] *= scale.z;
+
+	result.m[3][0] = translate.x;
+	result.m[3][1] = translate.y;
+	result.m[3][2] = translate.z;
+
+	return result;
+}
+
+
+//æ­£å°„å½±è¡Œåˆ—
 Matrix4x4 MakeOrthographicMatrix(float left, float top, float right, float bottom, float nearClip, float farClip)
 {
 	Matrix4x4 result;
@@ -316,7 +207,7 @@ Matrix4x4 MakeOrthographicMatrix(float left, float top, float right, float botto
 	return result;
 }
 
-//“§‹“Š‰es—ñ aspectratio=ƒAƒXƒyƒNƒg”ä FOV(FieldOfview)=
+//é€è¦–æŠ•å½±è¡Œåˆ— aspectratio=ã‚¢ã‚¹ãƒšã‚¯ãƒˆæ¯” FOV(FieldOfview)=
 Matrix4x4 MakePerspectiveFovMatrix(float fovY, float aspectRatio, float nearClip, float farClip)
 {
 	Matrix4x4 result;
@@ -344,7 +235,7 @@ Matrix4x4 MakePerspectiveFovMatrix(float fovY, float aspectRatio, float nearClip
 	return result;
 }
 
-//ƒrƒ…[ƒ|[ƒg•ÏŠ·s—ñ
+//ãƒ“ãƒ¥ãƒ¼ãƒãƒ¼ãƒˆå¤‰æ›è¡Œåˆ—
 Matrix4x4 MakeViewPortMatrix(const float& left, const float& top, const float& width, const float& height, const float& minDepth, const float& maxDepth)
 {
 	Matrix4x4 result;
@@ -426,15 +317,15 @@ void DrawSphere(const Sphere& sphere, const Matrix4x4& viewProjectionMat, const 
 	float pi = std::numbers::pi_v<float>;
 	const uint32_t kSubdivision = 12;
 
-	//Œo“x•ªŠ„‚P‚Â•ª‚ÌŠp“x
+	//çµŒåº¦åˆ†å‰²ï¼‘ã¤åˆ†ã®è§’åº¦
 	const float kLonEvery = pi * 2.0f / float(kSubdivision);
-	//ˆÜ“x•ªŠ„‚P‚Â•ª‚ÌŠp“x
+	//ç·¯åº¦åˆ†å‰²ï¼‘ã¤åˆ†ã®è§’åº¦
 	const float kLatEvery = pi / float(kSubdivision);
 
-	//ˆÜ“x‚Ì•ûŒü‚É•ªŠ„
+	//ç·¯åº¦ã®æ–¹å‘ã«åˆ†å‰²
 	for (uint32_t latIndex = 0; latIndex < kSubdivision; ++latIndex) {
 		float lat = -pi / 2.0f + kLatEvery * latIndex;
-		//Œo“x‚Ì•ûŒü‚É•ªŠ„‚µ‚È‚ª‚çü‚ğ•`‚­
+		//çµŒåº¦ã®æ–¹å‘ã«åˆ†å‰²ã—ãªãŒã‚‰ç·šã‚’æã
 		for (uint32_t lonIndex = 0; lonIndex < kSubdivision; ++lonIndex) {
 			float lon = lonIndex * kLonEvery;
 
@@ -455,7 +346,7 @@ void DrawSphere(const Sphere& sphere, const Matrix4x4& viewProjectionMat, const 
 				sphere.center.y + sphere.radius * std::sinf(lat),
 				sphere.center.z + sphere.radius * std::cosf(lat) * std::sinf(lon + kLonEvery) };
 
-			//ü‚ğ•`‚­
+			//ç·šã‚’æã
 			Vector3 screenA = Transform(Transform(a, viewProjectionMat), viewportMat);
 			Vector3 screenB = Transform(Transform(b, viewProjectionMat), viewportMat);
 			Vector3 screenC = Transform(Transform(c, viewProjectionMat), viewportMat);
@@ -501,34 +392,25 @@ void DrawGrid(const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewPortMa
 
 
 struct Segment {
-	Vector3 origin;//n“_
-	Vector3 diff;//I“_‚Ö‚Ì·•ªƒxƒNƒgƒ‹
+	Vector3 origin;//å§‹ç‚¹
+	Vector3 diff;//çµ‚ç‚¹ã¸ã®å·®åˆ†ãƒ™ã‚¯ãƒˆãƒ«
 };
 
-struct Spherical {
-	float theta;
-	float phi;
-	float z;
-};
 
-struct Camera {
-	Vector3 center;//’†S
-	Spherical spherical;//‹…ó
-};
 
 
 float Dot(const Vector3& v1, const Vector3& v2) {
 	return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
 }
 
-//ƒxƒNƒgƒ‹Ë‰e
+//ãƒ™ã‚¯ãƒˆãƒ«å°„å½±
 Vector3 Project(const Vector3& v1, const Vector3& v2) {
 	float v25qLength = Dot(v2, v2);
 	float dot = Dot(v1, v2);
 	return Multiply(dot / v25qLength, v2);
 }
 
-//Å‹ßÚ“_‚ğ‹‚ß‚é
+//æœ€è¿‘æ¥ç‚¹ã‚’æ±‚ã‚ã‚‹
 Vector3 ClosestPoint(const Vector3& point, const Segment& segment) {
 	Vector3 v = Subtract(point, segment.origin);
 	float t = Dot(v, segment.diff) / Dot(segment.diff, segment.diff);
@@ -536,33 +418,3 @@ Vector3 ClosestPoint(const Vector3& point, const Segment& segment) {
 	return Add(segment.origin, Multiply(t, segment.diff));
 }
 
-
-//==================================================
-Vector3 ToCartesian(const Spherical& cam) {
-	Vector3 result;
-
-
-	return result;
-};
-
-Matrix4x4 InverseAffine(const Matrix4x4& m1) {
-	Matrix4x4 result;
-
-	result = Inverse(m1);
-
-
-
-	return result;
-};
-
-Matrix4x4 CalcViewMatrix(const Camera& camera) {
-	Vector3 offset = ToCartesian(camera.spherical);
-
-	Matrix4x4 viewMatrix = MultiplyMat(MakeRotateXMatrix(camera.spherical.theta), MakeRotateYMatrix(-camera.spherical.phi));
-
-	viewMatrix.m[3][0] = offset.x + camera.center.x;
-	viewMatrix.m[3][1] = offset.y + camera.center.y;
-	viewMatrix.m[3][2] = offset.z + camera.center.z;
-
-	return;
-}
