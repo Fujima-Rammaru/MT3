@@ -19,3 +19,8 @@ struct Segment {
 struct Triangle {
 	Vector3 vertices[3]; //頂点
 };
+
+struct AABB {
+	Vector3 min;
+	Vector3 max;
+};
