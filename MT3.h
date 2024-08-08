@@ -1,5 +1,5 @@
 #pragma once
-#include"Vector3.h"
+#include"Struct.h"
 #include"matrix4x4.h"
 #include<cmath>
 #include<assert.h>
@@ -308,11 +308,6 @@ Vector3 Cross(const Vector3& v1, const Vector3& v2)
 	);
 }
 
-struct Sphere {
-	Vector3 center;
-	float radius;
-};
-
 void DrawSphere(const Sphere& sphere, const Matrix4x4& viewProjectionMat, const Matrix4x4& viewportMat, uint32_t color) {
 	float pi = std::numbers::pi_v<float>;
 	const uint32_t kSubdivision = 12;
@@ -390,12 +385,6 @@ void DrawGrid(const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewPortMa
 	}
 }
 
-
-struct Segment {
-	Vector3 origin;//始点
-	Vector3 diff;//終点への差分ベクトル
-};
-
 float Dot(const Vector3& v1, const Vector3& v2) {
 	return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
 }
@@ -424,5 +413,57 @@ bool IsCollision(const Sphere& s1, const Sphere& s2) {
 		return true;
 	}
 	return false;
-
 }
+
+float Length(const Vector3& v)
+{
+	float LengthResult{};
+
+	LengthResult = sqrtf((v.x * v.x) + (v.y * v.y) + (v.z * v.z));
+
+	return LengthResult;
+}
+
+Vector3 Normalize(const Vector3& v)
+{
+	float length = Length(v);
+	return { v.x / length, v.y / length, v.z / length };
+}
+
+Vector3 Perpendicular(const Vector3& vector)
+{
+	if (vector.x != 0.0f || vector.y != 0.0f)
+	{
+		return { -vector.y,vector.x,0.0f };
+	}
+	return { 0.0f,-vector.z,vector.y };
+}
+
+void DrawPlane(const Plane& plane, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewPortMatrix, uint32_t color)
+{
+	Vector3 center = Multiply(plane.distance, plane.normal);
+	Vector3 perpendiculars[4];
+	perpendiculars[0] = Normalize(Perpendicular(plane.normal));
+	perpendiculars[1] = { -perpendiculars[0].x,-perpendiculars[0].y,-perpendiculars[0].z };
+	perpendiculars[2] = Cross(plane.normal, perpendiculars[0]);
+	perpendiculars[3] = { -perpendiculars[2].x,-perpendiculars[2].y,-perpendiculars[2].z };
+	
+	Vector3 points[4];
+	for (int32_t index = 0; index < 4; ++index)
+	{
+		Vector3 extend = Multiply(2.0f, perpendiculars[index]);
+		Vector3 point = Add(center, extend);
+		points[index] = Transform(Transform(point, viewProjectionMatrix), viewPortMatrix);
+	}
+	
+	Novice::DrawLine((int)points[0].x, (int)points[0].y, (int)points[2].x, (int)points[2].y, color);
+	Novice::DrawLine((int)points[1].x, (int)points[1].y, (int)points[2].x, (int)points[2].y, color);
+	Novice::DrawLine((int)points[0].x, (int)points[0].y, (int)points[3].x, (int)points[3].y, color);
+	Novice::DrawLine((int)points[1].x, (int)points[1].y, (int)points[3].x, (int)points[3].y, color);
+}
+
+bool IsCollision(const Sphere& sphere, const Plane& plane) {
+	float distance = std::abs(Dot(sphere.center,plane.normal)-plane.distance);
+	return distance <= sphere.radius;
+}
+
