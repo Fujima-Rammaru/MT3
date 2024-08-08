@@ -448,7 +448,7 @@ void DrawPlane(const Plane& plane, const Matrix4x4& viewProjectionMatrix, const 
 	perpendiculars[1] = { -perpendiculars[0].x,-perpendiculars[0].y,-perpendiculars[0].z };
 	perpendiculars[2] = Cross(plane.normal, perpendiculars[0]);
 	perpendiculars[3] = { -perpendiculars[2].x,-perpendiculars[2].y,-perpendiculars[2].z };
-	
+
 	Vector3 points[4];
 	for (int32_t index = 0; index < 4; ++index)
 	{
@@ -456,7 +456,7 @@ void DrawPlane(const Plane& plane, const Matrix4x4& viewProjectionMatrix, const 
 		Vector3 point = Add(center, extend);
 		points[index] = Transform(Transform(point, viewProjectionMatrix), viewPortMatrix);
 	}
-	
+
 	Novice::DrawLine((int)points[0].x, (int)points[0].y, (int)points[2].x, (int)points[2].y, color);
 	Novice::DrawLine((int)points[1].x, (int)points[1].y, (int)points[2].x, (int)points[2].y, color);
 	Novice::DrawLine((int)points[0].x, (int)points[0].y, (int)points[3].x, (int)points[3].y, color);
@@ -465,7 +465,7 @@ void DrawPlane(const Plane& plane, const Matrix4x4& viewProjectionMatrix, const 
 
 //球と平面の当たり判定
 bool IsCollision(const Sphere& sphere, const Plane& plane) {
-	float distance = std::abs(Dot(sphere.center,plane.normal)-plane.distance);
+	float distance = std::abs(Dot(sphere.center, plane.normal) - plane.distance);
 	return distance <= sphere.radius;
 }
 
@@ -489,4 +489,50 @@ void DrawSegment(const Segment& segment, const Matrix4x4& viewProjectionMatrix, 
 	Vector3 end = Transform(Transform(Add(segment.origin, segment.diff), viewProjectionMatrix), viewportMatrix);
 
 	Novice::DrawLine(int(start.x), int(start.y), int(end.x), int(end.y), color);
+}
+
+//直線を用いた三角形の描画
+void DrawTriangle(const Triangle& triangle, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, uint32_t color) {
+	Vector3 start[3];
+	Vector3 end[3];
+
+	for (uint32_t i = 0; i < 3; i++) {
+		start[i] = Transform(Transform(triangle.vertices[i], viewProjectionMatrix), viewportMatrix);
+		end[i] = Transform(Transform(triangle.vertices[(i + 1) % 3], viewProjectionMatrix), viewportMatrix);
+		Novice::DrawLine(int(start[i].x), int(start[i].y), int(end[i].x), int(end[i].y), color);
+	}
+}
+
+//三角形と直線の衝突判定
+bool IsCollision(const Triangle& triangle, const Segment& segment) {
+	Plane plane;
+	Vector3 v01 = Subtract(triangle.vertices[1], triangle.vertices[0]);
+	Vector3 v12 = Subtract(triangle.vertices[2], triangle.vertices[1]);
+	Vector3 v20 = Subtract(triangle.vertices[0], triangle.vertices[2]);
+
+	plane.normal = Normalize(Cross(v01, v12));
+	plane.distance = Dot(triangle.vertices[0], plane.normal);
+
+
+	float t = (plane.distance - Dot(segment.origin, plane.normal)) / Dot(plane.normal, segment.diff);
+
+	Vector3 tb = Multiply(t, segment.diff);
+
+	Vector3 p = Add(segment.origin, tb);
+
+	Vector3 v0p = p - triangle.vertices[0];
+	Vector3 v1p = p - triangle.vertices[1];
+	Vector3 v2p = p - triangle.vertices[2];
+
+	Vector3 cross01 = Cross(v01, v1p);
+	Vector3 cross12 = Cross(v12, v2p);
+	Vector3 cross20 = Cross(v20, v0p);
+
+	if (Dot(cross01, plane.normal) >= 0.0f &&
+		Dot(cross12, plane.normal) >= 0.0f &&
+		Dot(cross20, plane.normal) >= 0.0f) {
+		return true;
+	}
+
+	return false;
 }

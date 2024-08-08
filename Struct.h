@@ -15,3 +15,7 @@ struct Segment {
 	Vector3 origin;//始点
 	Vector3 diff;//終点への差分ベクトル
 };
+
+struct Triangle {
+	Vector3 vertices[3]; //頂点
+};
