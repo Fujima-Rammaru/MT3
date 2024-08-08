@@ -69,13 +69,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		ImGui::Begin("Window");
 		ImGui::DragFloat3("sphere1Center", &sphere.center.x, 0.01f);
 		ImGui::DragFloat("sphere1Radius", &sphere.radius, 0.01f);
-
-		ImGui::End();
-
-		ImGui::Begin("Window2");
 		ImGui::DragFloat3("Plane.normal", &plane.normal.x, 0.01f);
 		ImGui::DragFloat("PlaneDistance", &plane.distance, 0.01f);
 		ImGui::End();
+
+		
+		
+		
 		///
 		/// ↑描画処理ここまで
 		///
