@@ -88,17 +88,17 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 		rotate.y += 0.04f;
 		if (Novice::CheckHitKey(DIK_A)) {
-			translate.x -= 0.001f;
+			translate.x -= 0.005f;
 		}
 		else if (Novice::CheckHitKey(DIK_D)) {
-			translate.x += 0.001f;
+			translate.x += 0.005f;
 		}
 
 		if (Novice::CheckHitKey(DIK_W)) {
-			translate.z += 0.001f;
+			translate.z += 0.005f;
 		}
 		else if (Novice::CheckHitKey(DIK_S)) {
-			translate.z -= 0.001f;
+			translate.z -= 0.005f;
 		}
 
 
@@ -129,7 +129,7 @@ matFunc->Transform(matFunc->Transform(kLocalVertices[2],worldViewProjectionMatri
 		/// 
 
 		MatrixScreenPrintf(0, 0, worldMatrix, "worldMatrix");
-
+		VectorScreenPrintf(1000, 0, cross, "Cross");
 		Novice::DrawTriangle(
 			int(screenVertices1[0].x),
 			int(screenVertices1[0].y),
