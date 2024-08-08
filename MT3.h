@@ -396,9 +396,6 @@ struct Segment {
 	Vector3 diff;//終点への差分ベクトル
 };
 
-
-
-
 float Dot(const Vector3& v1, const Vector3& v2) {
 	return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
 }
@@ -418,3 +415,13 @@ Vector3 ClosestPoint(const Vector3& point, const Segment& segment) {
 	return Add(segment.origin, Multiply(t, segment.diff));
 }
 
+//球と球の衝突判定
+bool IsCollision(const Sphere& s1, const Sphere& s2) {
+	Vector3 distancevector = Subtract(s1.center, s2.center);
+	float distanceSq = Dot(distancevector, distancevector);
+	float sumDistanceSq = s1.radius + s2.radius;
+	if (distanceSq <= sumDistanceSq) {
+		return true;
+	}
+	return false;
+}

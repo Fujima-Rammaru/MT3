@@ -16,26 +16,19 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Vector3 translate = { 0,0,0 };
 	Vector3 scale = { 1.0f,1.0f,1.0f };
 	Vector3 cameraScale = { 1.0f,1.0f,1.0f };
-	
+
 	Matrix4x4 worldMatrix = MakeAffineMatrix(scale, rotate, translate);
 	Matrix4x4 cameraMatrix = MakeAffineMatrix(cameraScale, cameraRotate, cameraTranslate);
 	Matrix4x4 viewMatrix = Inverse(cameraMatrix);
 	Matrix4x4 projectionMatrix = MakePerspectiveFovMatrix(0.45f, float(kWindowWidth) / float(kWindowHeight), 0.1f, 100.0f);
 	Matrix4x4 worldviewProjectionMatrix = Multiply(worldMatrix, Multiply(viewMatrix, projectionMatrix));
 	Matrix4x4 viewportMatrix = MakeViewPortMatrix(0, 0, float(kWindowWidth), float(kWindowHeight), 0.0f, 1.0f);
-	
-	Segment segment = { {-2.0f,-1.0f,0.0f},{3.0f,2.0f,2.0f} };
-	Vector3 point = { -1.5f,0.6f,0.6f };
-	
-	Vector3 project = Project(Subtract(point, segment.origin), segment.diff);
-	Vector3 closestPoint = ClosestPoint(point, segment);
 
-	Sphere pointSphere = { point,0.01f };
-	Sphere closestPointSphere = { closestPoint,0.01f };
-
-	Vector3 start = Transform(Transform(segment.origin, worldviewProjectionMatrix), viewportMatrix);
-	Vector3 end = Transform(Transform(Add(segment.origin, segment.diff), projectionMatrix), viewportMatrix);
-
+	Sphere spheres[2];
+	spheres[0].center = { 0,0,0 };
+	spheres[1].center = { 0.5f,0.2f,0.2f };
+	spheres[0].radius = 0.5f;
+	spheres[1].radius = 0.5f;
 	// キー入力結果を受け取る箱
 	char keys[256] = { 0 };
 	char preKeys[256] = { 0 };
@@ -61,16 +54,21 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// ↓描画処理ここから
 		///
 		DrawGrid(worldviewProjectionMatrix, viewportMatrix);
-		Novice::DrawLine(int(start.x), int(start.y), int(end.x), int(end.y), WHITE);
-		DrawSphere(pointSphere, worldviewProjectionMatrix, viewportMatrix, RED);
-		DrawSphere(closestPointSphere, worldviewProjectionMatrix, viewportMatrix, BLACK);
 
-		
+		DrawSphere(spheres[1], worldviewProjectionMatrix, viewportMatrix, WHITE);
+
+		if (IsCollision(spheres[0], spheres[1])) {
+			DrawSphere(spheres[0], worldviewProjectionMatrix, viewportMatrix, RED);
+
+		}
+		else {
+			DrawSphere(spheres[0], worldviewProjectionMatrix, viewportMatrix, WHITE);
+		}
 		ImGui::Begin("Window");
-		ImGui::InputFloat3("point", &point.x, "%.3f", ImGuiInputTextFlags_ReadOnly);
-		ImGui::InputFloat3("segment origin", &segment.origin.x, "%.3f", ImGuiInputTextFlags_ReadOnly);
-		ImGui::InputFloat3("segment diff", &segment.diff.x, "%.3f", ImGuiInputTextFlags_ReadOnly);
-		ImGui::InputFloat3("Project", &project.x, "%.3f", ImGuiInputTextFlags_ReadOnly);
+		ImGui::DragFloat3("sphere1Center", &spheres[0].center.x, 0.01f);
+		ImGui::DragFloat("sphere1Radius", &spheres[0].radius, 0.01f);
+		ImGui::DragFloat3("sphere2Center", &spheres[1].center.x, 0.01f);
+		ImGui::DragFloat("sphere2Radius", &spheres[1].radius, 0.01f);
 		ImGui::End();
 		///
 		/// ↑描画処理ここまで
