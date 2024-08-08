@@ -462,8 +462,29 @@ void DrawPlane(const Plane& plane, const Matrix4x4& viewProjectionMatrix, const 
 	Novice::DrawLine((int)points[1].x, (int)points[1].y, (int)points[3].x, (int)points[3].y, color);
 }
 
+//球と平面の当たり判定
 bool IsCollision(const Sphere& sphere, const Plane& plane) {
 	float distance = std::abs(Dot(sphere.center,plane.normal)-plane.distance);
 	return distance <= sphere.radius;
 }
 
+//線と平面の当たり判定
+bool IsCollision(const Segment& segment, const Plane& plane) {
+	float dot = Dot(plane.normal, segment.diff);
+	if (dot == 0.0f) {
+		return false;
+	}
+
+	float t = (plane.distance - Dot(segment.origin, plane.normal)) / dot;
+	if (t >= 0.0f && t <= 1.0f) {
+		return true;
+	}
+	return false;
+}
+
+void DrawSegment(const Segment& segment, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, uint32_t color) {
+	Vector3 start = Transform(Transform(segment.origin, viewProjectionMatrix), viewportMatrix);
+	Vector3 end = Transform(Transform(Add(segment.origin, segment.diff), viewProjectionMatrix), viewportMatrix);
+
+	Novice::DrawLine(int(start.x), int(start.y), int(end.x), int(end.y), color);
+}
