@@ -19,12 +19,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Vector3 scale = { 1.0f,1.0f,1.0f };
 
 	AABB aabb1{
-		.min{-0.5f, -0.5f, -0.5f},
-		.max{0.0f, 0.0f, 0.0f},
+		.min{-1.5f, 0.0f,0.0f},
+		.max{-0.5f, 0.5f, 1.0f},
 	};
 
 	AABB aabb2{
-		.min{0.2f, 0.2f, 0.2f},
+		.min{0.0f, 0.0f, 0.0f},
 		.max{1.0f, 1.0f, 1.0f},
 	};
 
