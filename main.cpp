@@ -11,24 +11,20 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	const int kWindowHeight = 720;
 	Novice::Initialize(kWindowTitle, kWindowWidth, kWindowHeight);
 
-	Vector3 cameraTranslate = { 0.0f,0.5f,-6.0f };
-	Vector3 cameraRotate = { 0.0f,0.0f,0.0f };
+	Vector3 cameraTranslate = { 2.28f,2.41f,-6.0f };
+	Vector3 cameraRotate = { 0.32f,-0.36f,0.1f };
 	Vector3 cameraScale = { 1.0f,1.0f,1.0f };
 	Vector3 translate = { 0,0,0 };
 	Vector3 rotate = { 0,0,0 };
 	Vector3 scale = { 1.0f,1.0f,1.0f };
 
-	AABB aabb1{
+	AABB aabb{
 		.min{-1.5f, 0.0f,0.0f},
 		.max{-0.5f, 0.5f, 1.0f},
 	};
-
-	AABB aabb2{
-		.min{0.0f, 0.0f, 0.0f},
-		.max{1.0f, 1.0f, 1.0f},
-	};
-
 	uint32_t color = WHITE;
+
+	Sphere sphere = { 0.4f,0.5f,0.0f,0.5f };
 
 	Matrix4x4 worldMatrix = MakeAffineMatrix(scale, rotate, translate);
 	Matrix4x4 cameraMatrix = MakeAffineMatrix(cameraScale, cameraRotate, cameraTranslate);
@@ -53,33 +49,25 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 		/// ↓更新処理ここから
 		///
-	
+
 		ImGui::Begin("Window");
-		ImGui::DragFloat3("aabb1.min.", &aabb1.min.x, 0.01f);
-		ImGui::DragFloat3("aabb1.max.", &aabb1.max.x, 0.01f);
-		ImGui::DragFloat3("aabb2.min.", &aabb2.min.x, 0.01f);
-		ImGui::DragFloat3("aabb2.max.", &aabb2.max.x, 0.01f);
+		ImGui::DragFloat3("aabb.min", &aabb.min.x, 0.01f);
+		ImGui::DragFloat3("aabb.max", &aabb.max.x, 0.01f);
+		ImGui::DragFloat3("sphere.center", &sphere.center.x, 0.01f);
+		ImGui::DragFloat("sphere.radius", &sphere.radius, 0.01f);
 		ImGui::DragFloat3("cameraRotate", &cameraRotate.x, 0.01f);
 		ImGui::DragFloat3("cameraTranslate", &cameraTranslate.x, 0.01f);
 		ImGui::End();
-		
+
 		//min/maxが入れ替わらないように
-		aabb1.min.x = (std::min)(aabb1.min.x, aabb1.max.x);
-		aabb1.min.y = (std::min)(aabb1.min.y, aabb1.max.y);
-		aabb1.min.z = (std::min)(aabb1.min.z, aabb1.max.z);
+		aabb.min.x = (std::min)(aabb.min.x, aabb.max.x);
+		aabb.min.y = (std::min)(aabb.min.y, aabb.max.y);
+		aabb.min.z = (std::min)(aabb.min.z, aabb.max.z);
 
-		aabb1.max.x = (std::max)(aabb1.min.x, aabb1.max.x);
-		aabb1.max.y = (std::max)(aabb1.min.y, aabb1.max.y);
-		aabb1.max.z = (std::max)(aabb1.min.z, aabb1.max.z);
+		aabb.max.x = (std::max)(aabb.min.x, aabb.max.x);
+		aabb.max.y = (std::max)(aabb.min.y, aabb.max.y);
+		aabb.max.z = (std::max)(aabb.min.z, aabb.max.z);
 
-		aabb2.min.x = (std::min)(aabb2.min.x, aabb2.max.x);
-		aabb2.min.y = (std::min)(aabb2.min.y, aabb2.max.y);
-		aabb2.min.z = (std::min)(aabb2.min.z, aabb2.max.z);
-
-		aabb2.max.x = (std::max)(aabb2.min.x, aabb2.max.x);
-		aabb2.max.y = (std::max)(aabb2.min.y, aabb2.max.y);
-		aabb2.max.z = (std::max)(aabb2.min.z, aabb2.max.z);
-		
 		//レンダリングパイプライン
 		worldMatrix = MakeAffineMatrix(scale, rotate, translate);
 		cameraMatrix = MakeAffineMatrix(cameraScale, cameraRotate, cameraTranslate);
@@ -88,7 +76,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		worldViewProjectionMatrix = Multiply(worldMatrix, Multiply(viewMatrix, projectionMatrix));
 		viewportMatrix = MakeViewPortMatrix(0, 0, float(kWindowWidth), float(kWindowHeight), 0.0f, 1.0f);
 
-		if (isCollision(aabb1, aabb2)) {
+		if (IsCollision(aabb, sphere)) {
 			color = RED;
 		}
 		else {
@@ -102,8 +90,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// ↓描画処理ここから
 		///
 		DrawGrid(worldViewProjectionMatrix, viewportMatrix);
-		DrawAABB(aabb1, worldViewProjectionMatrix, viewportMatrix, color);
-		DrawAABB(aabb2, worldViewProjectionMatrix, viewportMatrix, WHITE);
+		DrawAABB(aabb, worldViewProjectionMatrix, viewportMatrix, color);
+		DrawSphere(sphere, worldViewProjectionMatrix, viewportMatrix, WHITE);
 		///
 		/// ↑描画処理ここまで
 		///
