@@ -80,6 +80,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		aabb2.max.y = (std::max)(aabb2.min.y, aabb2.max.y);
 		aabb2.max.z = (std::max)(aabb2.min.z, aabb2.max.z);
 		
+		//レンダリングパイプライン
 		worldMatrix = MakeAffineMatrix(scale, rotate, translate);
 		cameraMatrix = MakeAffineMatrix(cameraScale, cameraRotate, cameraTranslate);
 		viewMatrix = Inverse(cameraMatrix);
@@ -103,12 +104,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		DrawGrid(worldViewProjectionMatrix, viewportMatrix);
 		DrawAABB(aabb1, worldViewProjectionMatrix, viewportMatrix, color);
 		DrawAABB(aabb2, worldViewProjectionMatrix, viewportMatrix, WHITE);
-
-		
-
-
-
-
 		///
 		/// ↑描画処理ここまで
 		///
