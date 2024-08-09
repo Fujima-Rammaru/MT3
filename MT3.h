@@ -1,4 +1,5 @@
 #pragma once
+#define NOMINMAX
 #include"Struct.h"
 #include"matrix4x4.h"
 #include<cmath>
@@ -595,6 +596,48 @@ bool IsCollision(const AABB& aabb, const Sphere& sphere) {
 	//距離が半径よりも小さければ衝突
 	if (distance <= sphere.radius) {
 		return true;
+	}
+	return false;
+}
+
+//AABBと線分の当たり判定
+bool IsCollision(const AABB& aabb, const Segment& segment) {
+	Vector3 mins;
+
+	mins.x = (aabb.min.x - segment.origin.x) / segment.diff.x;
+	mins.y = (aabb.min.y - segment.origin.y) / segment.diff.y;
+	mins.z = (aabb.min.z - segment.origin.z) / segment.diff.z;
+
+	Vector3 maxes;
+	maxes.x = (aabb.max.x - segment.origin.x) / segment.diff.x;
+	maxes.y = (aabb.max.y - segment.origin.y) / segment.diff.y;
+	maxes.z = (aabb.max.z - segment.origin.z) / segment.diff.z;
+
+	Vector3 nears;
+	nears.x = (std::min)(mins.x, maxes.x);
+	nears.y = (std::min)(mins.y, maxes.y);
+	nears.z = (std::min)(mins.z, maxes.z);
+
+	Vector3 fars;
+	fars.x = (std::max)(mins.x, maxes.x);
+	fars.y = (std::max)(mins.y, maxes.y);
+	fars.z = (std::max)(mins.z, maxes.z);
+
+	//AABBとの衝突点（貫通点）のtが小さい方
+	float tMin = (std::max)(nears.x, (std::max)(nears.y, nears.z));
+	//AABBとの衝突点（貫通点）のtが大きい方
+	float tMax = (std::min)(fars.x, (std::min)(fars.y, fars.z));
+
+	if (tMin <= tMax) {
+
+		if ((tMin * tMax) < 0.0f)
+		{
+			return true;
+		}
+		if (tMin >= 0 && tMin <= 1 || tMax >= 0 && tMax <= 1)
+		{
+			return true;
+		}
 	}
 	return false;
 }
