@@ -53,6 +53,33 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 		/// ↓更新処理ここから
 		///
+	
+		ImGui::Begin("Window");
+		ImGui::DragFloat3("aabb1.min.", &aabb1.min.x, 0.01f);
+		ImGui::DragFloat3("aabb1.max.", &aabb1.max.x, 0.01f);
+		ImGui::DragFloat3("aabb2.min.", &aabb2.min.x, 0.01f);
+		ImGui::DragFloat3("aabb2.max.", &aabb2.max.x, 0.01f);
+		ImGui::DragFloat3("cameraRotate", &cameraRotate.x, 0.01f);
+		ImGui::DragFloat3("cameraTranslate", &cameraTranslate.x, 0.01f);
+		ImGui::End();
+		
+		//min/maxが入れ替わらないように
+		aabb1.min.x = (std::min)(aabb1.min.x, aabb1.max.x);
+		aabb1.min.y = (std::min)(aabb1.min.y, aabb1.max.y);
+		aabb1.min.z = (std::min)(aabb1.min.z, aabb1.max.z);
+
+		aabb1.max.x = (std::max)(aabb1.min.x, aabb1.max.x);
+		aabb1.max.y = (std::max)(aabb1.min.y, aabb1.max.y);
+		aabb1.max.z = (std::max)(aabb1.min.z, aabb1.max.z);
+
+		aabb2.min.x = (std::min)(aabb2.min.x, aabb2.max.x);
+		aabb2.min.y = (std::min)(aabb2.min.y, aabb2.max.y);
+		aabb2.min.z = (std::min)(aabb2.min.z, aabb2.max.z);
+
+		aabb2.max.x = (std::max)(aabb2.min.x, aabb2.max.x);
+		aabb2.max.y = (std::max)(aabb2.min.y, aabb2.max.y);
+		aabb2.max.z = (std::max)(aabb2.min.z, aabb2.max.z);
+		
 		worldMatrix = MakeAffineMatrix(scale, rotate, translate);
 		cameraMatrix = MakeAffineMatrix(cameraScale, cameraRotate, cameraTranslate);
 		viewMatrix = Inverse(cameraMatrix);
@@ -77,14 +104,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		DrawAABB(aabb1, worldViewProjectionMatrix, viewportMatrix, color);
 		DrawAABB(aabb2, worldViewProjectionMatrix, viewportMatrix, WHITE);
 
-		ImGui::Begin("Window");
-		ImGui::DragFloat3("aabb1.min.", &aabb1.min.x, 0.01f);
-		ImGui::DragFloat3("aabb1.max.", &aabb1.max.x, 0.01f);
-		ImGui::DragFloat3("aabb2.min.", &aabb2.min.x, 0.01f);
-		ImGui::DragFloat3("aabb2.max.", &aabb2.max.x, 0.01f);
-		ImGui::DragFloat3("cameraRotate", &cameraRotate.x, 0.01f);
-		ImGui::DragFloat3("cameraTranslate", &cameraTranslate.x, 0.01f);
-		ImGui::End();
+		
 
 
 
